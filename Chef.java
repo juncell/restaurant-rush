@@ -1,0 +1,17 @@
+public class Chef extends Staff {
+
+    public Chef(String name) {
+        super(name);
+    }
+
+    public boolean prepOrder(Order order) {
+        if (this.hasActedThisTurn || order == null || order.getStatus() != Order.Status.PLACED) {
+            return false;
+        }
+        boolean prepped = order.advancePrep();
+        if (prepped) {
+            this.hasActedThisTurn = true;
+        }
+        return prepped;
+    }
+}
