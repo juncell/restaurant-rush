@@ -1,26 +1,25 @@
-public class MenuItem{
-  // instance variables
-  private String name;
-  private int basePrice;
-  private int prepUnits; 
+public class MenuItem {
+    private final String name;
+    private final int basePriceCents;
+    private final int prepUnits;
 
-  // create constructors 
-  public MenuItem(String name, int basePrice, int prepUnits){
-    this.name = name;
-    this.basePrice = basePrice;
-    this.prepUnits = prepUnits;
-  }
+    public MenuItem(String name, int basePriceCents, int prepUnits) {
+        this.name = name;
+        this.basePriceCents = basePriceCents;
+        this.prepUnits = prepUnits;
+    }
 
-  // accessor methods
-  public String getName(){
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public int getPrice(){
-    return basePrice;
-  }
+    public int getPrice() {
+        return basePriceCents;
+    }
 
-  public int getPrepUnits(){
-    return prepUnits;
-  }
+    public int getPrepUnits() {
+        return prepUnits;
+    }
 }
+
+
