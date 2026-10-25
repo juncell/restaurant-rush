@@ -25,3 +25,4 @@ public abstract class Staff{
     this.hasActedThisTurn = false;
   }
 }
+
