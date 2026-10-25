@@ -9,7 +9,7 @@ public class Host extends Staff {
             return false;
         }
 
-        table.seat(customer);
+        table.assignCustomer(customer);
         this.hasActedThisTurn = true;
         return true;
     }
