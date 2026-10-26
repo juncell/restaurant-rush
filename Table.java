@@ -1,41 +1,43 @@
 public class Table {
     private int tableNumber = 0; 
-    private int capacity = 0; 
-    private int numRemaining = 0; 
+    private int capacity = 0;  // for the 3 stages, capacity = 1 (default), else can scale 
+    private int seatsRemaining = 0; 
 
+    // constructor 
     public Table(int tableNumber, int capacity){
         this.tableNumber = tableNumber; 
         this.capacity = capacity; 
     }
 
     public void assignCustomer(Customer customer){
-        if (this.numRemaining == 0) {
-            System.out.println("Table full!")
+        // if no more seats -> dont assign customer 
+        if (this.seatsRemaining == 0) {
+            System.out.println("Table full! Choose another table.");
         }
 
         else{
-            this.numRemaining -= 1; 
+            this.seatsRemaining -= 1; 
             customer.setTableNumber(this.tableNumber);
-
         }  
     }
 
-    public int get_numRemaining(){
-        return this.numRemaining; 
+    public int get_seatsRemaining(){
+        return this.seatsRemaining; 
     }
 
     public void removeCustomer() {
-        if (this.numRemaining == this.capacity) {
-            System.out.println("No one to remove from an empty table!"); 
+        // if all table seats are empty -> cannot remove customer 
+        if (this.seatsRemaining == this.capacity) {
+            System.out.println("No one to remove from empty table!"); 
         }
 
         else {
-            this.numRemaining += 1; 
+            this.seatsRemaining += 1; 
         }
     }
 
     public boolean isOccupied(){
-        if (this.numRemaining == 0) {
+        if (this.seatsRemaining == 0) {
             return true; 
         }
 

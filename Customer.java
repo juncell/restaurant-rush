@@ -1,9 +1,10 @@
 public class Customer {
+    // since all customers have this attribute --> make it protected 
     protected int satisfaction = 100;
     protected boolean readyToPay = false;
     protected boolean served = false;
     protected boolean readyToServe = false;
-    protected double discount = 0.0;
+    protected double discount = 0.0; // overwrite this value in the child classes 
     protected int tableNumber = 0; 
     private Order currentOrder;
 
@@ -14,7 +15,16 @@ public class Customer {
     }
 
     public void setSatisfaction(int satisfaction) {
-        this.satisfaction = Math.max(0, Math.min(100, satisfaction));
+        if (satisfaction > 100) {
+            this.satisfaction = 100; 
+        }
+        else if (satisfaction < 0) {
+            this.satisfaction = 0; 
+        }
+
+        else {
+            this.satisfaction = satisfaction; 
+        }
     }
 
     public void setTableNumber(int tableNumber){

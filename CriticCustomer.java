@@ -1,20 +1,22 @@
+import java.util.Random; 
+
 public class CriticCustomer extends Customer {
     
     // preference/ unique behavior: 
     // 1) randomly select a favourite dish of the critic from preference array 
-    // 2) if that dish is ordered --> satisfaction loss = 10 rather than 12 
+    // 2) if that dish is ordered --> satisfaction loss = 15 rather than 12 
     
     private final String[] preference = {"Burger", "Salad", "Pasta"};
     private final String preferredDish;
 
     public CriticCustomer() {
-        this("Pasta");
-    }
+        super(); 
+        this.discount = 0.0; 
 
-    public CriticCustomer(String preferredDish) {
-        super();
-        this.discount = 0.0;
-        this.preferredDish = preferredDish;
+        // choosing random dish as favourite
+        Random random = new Random(); 
+        int randInt = random.nextInt(this.preference.length); 
+        this.preferredDish = this.preference[randInt];  
     }
 
     public String[] getPreference() {
@@ -27,12 +29,17 @@ public class CriticCustomer extends Customer {
 
     @Override
     public void satisfactionLoss() {
+        // unique behaviour: if customer has ordered preferred dish -> satisfaction -15 
+        // else, satisfaction -12 
+
         if (!this.served) {
             Order order = getCurrentOrder();
+
+            // if the preferred dish is ordered 
             if (order != null && order.getMenuItem().getName().contains(this.preferredDish)) {
-                setSatisfaction(this.satisfaction - 10);
+                setSatisfaction(this.satisfaction - 15);
             } else {
-                setSatisfaction(this.satisfaction - 12);
+                setSatisfaction(this.satisfaction - 12); // the default 
             }
         }
     }
