@@ -32,9 +32,10 @@ The player's role is the restaurant manager.
 
 ### Classes implemented 
 `VIPCustomer` and `CriticCustomer` are extended from the parent `Customer` class. 
+![UML diagram of customer classes](image.png)
 
 ### UML Diagram 
-![UML diagram of customer classes](image.png)
+
 
 
 ## Stage 3 
@@ -47,9 +48,10 @@ The player's role is the restaurant manager.
 * `ComboMeal`: composition of the `MenuItem` class. 
 * `HappyHour`: provides an additional 20% discount. 
 * `Host`: extends the `Staff` class. 
+![alt text](image-2.png)
 
 
 ### UML Diagram 
-![alt text](image-2.png)
+
 
 
