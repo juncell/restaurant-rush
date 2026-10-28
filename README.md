@@ -1,1 +1,55 @@
 # restaurant-rush
+Restaurant Rush is a playable restaurant management game in Java, played across 3 stages. Done as part of SC2002: Object Oriented Programming and Designing Assignment. 
+
+The player's role is the restaurant manager. 
+
+## Stage 1 
+### Specifications 
+1. There are 18 turns. 
+2. 3 staff: waiter, chef, cashier, each doing 1 unit of task per turn. 
+3. 2 total tables to seat customers.
+4. 1 customer comes in at the start of turns 1, 4, 7, 10, 13, 16. 
+5. Goal to succeed: at least 4 paid customers, $45 in revenue, average satisfaction >= 60.
+
+### Classes implemented 
+* `Customer`: handles satisfaction decrement, serving, seated and paid status. 
+* `Order`: composite class of customer; handles the price, served and payment status. 
+* `MenuItem`: handles the price, name and no. of prep units required. 
+* `Console UI`: handles how the gaming interface on the terminal looks like. 
+* `Staff`: parent class handling name and turn activity. 
+* `Restaurant`: handles how the restaurant functions (getting queue, menu, staff operations, etc). 
+* `Game Manager`: composite class that handles how the player plays the game (no. of turns, handle staff, play turn, etc). 
+
+### UML diagram 
+![UML Class Diagram for Stage 1](image-1.png)
+
+
+
+## Stage 2
+### Specifications 
+1. Implement new customer behaviours (VIP and Critic Customers). 
+2. The winning condition and general rule play remains the same. 
+
+### Classes implemented 
+`VIPCustomer` and `CriticCustomer` are extended from the parent `Customer` class. 
+
+### UML Diagram 
+![UML diagram of customer classes](image.png)
+
+
+## Stage 3 
+### Specifications 
+1. Host: either host or waiter can seat the hosts, but host cannot do any other tasks than right. 
+2. Combo Meal: made of 2 existing menu items. 
+3. Happy hour: additional 20% discount and an increment of satisfaction points (rather than decrement). 
+
+### Classes implemeneted 
+* `ComboMeal`: composition of the `MenuItem` class. 
+* `HappyHour`: provides an additional 20% discount. 
+* `Host`: extends the `Staff` class. 
+
+
+### UML Diagram 
+![alt text](image-2.png)
+
+
