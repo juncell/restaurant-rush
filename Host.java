@@ -1,7 +1,7 @@
 public class Host extends Staff {
 
-    public Host(String name) {
-        super(name);
+    public Host(int ID) {
+        super(ID);
     }
 
     public boolean seatCustomer(Customer customer, Table table) {
