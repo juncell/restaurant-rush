@@ -87,7 +87,7 @@ public class Customer {
         return this.satisfaction == 0 && !this.served;
     }
 
-    public int getCustomerID(){
+    public int getID(){
         return this.customerID; 
     }
 }

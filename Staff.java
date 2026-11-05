@@ -24,5 +24,9 @@ public abstract class Staff{
   public void resetTurn(){
     this.hasActedThisTurn = false;
   }
+
+  public int getID(){
+    return this.ID; 
+  }
 }
 
