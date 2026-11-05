@@ -2,6 +2,7 @@ public class Table {
     private int tableNumber = 0; 
     private int capacity = 1;  // for the 3 stages, capacity = 1 (default), else can scale 
     private int seatsRemaining = 0; 
+    private int occupant = 0; 
 
     // constructor 
     public Table(int tableNumber, int capacity){
@@ -14,11 +15,13 @@ public class Table {
         // if no more seats -> dont assign customer 
         if (this.seatsRemaining == 0) {
             System.out.println("Table full! Choose another table.");
+
         }
 
         else{
             this.seatsRemaining -= 1; 
             customer.setTableNumber(this.tableNumber);
+            this.occupant = customer.customerID; 
         }  
     }
 
@@ -49,5 +52,9 @@ public class Table {
 
     public int getTableNumber(){
         return this.tableNumber; 
+    }
+
+    public int getOccupant(){
+        return this.occupant; 
     }
 }
