@@ -40,12 +40,12 @@ public class Restaurant {
     // finds a customer in the queue or at a table; null if they are not in the restaurant
     public Customer findCustomer(int customerID) {
         for (Customer customer : this.waitingQueue) {
-            if (customer.getCustomerID() == customerID) {
+            if (customer.getID() == customerID) {
                 return customer;
             }
         }
         for (Customer customer : this.seating.keySet()) {
-            if (customer.getCustomerID() == customerID) {
+            if (customer.getID() == customerID) {
                 return customer;
             }
         }
