@@ -1,8 +1,8 @@
 public class Waiter extends Staff {
 
     // constructor 
-    public Waiter(String name) {
-        super(name);
+    public Waiter(int ID) {
+        super(ID);
     }
 
 
