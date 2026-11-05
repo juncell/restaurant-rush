@@ -1,9 +1,19 @@
+
 public class ComboMeal extends MenuItem {
     private final MenuItem item1;
     private final MenuItem item2;
 
     public ComboMeal(MenuItem item1, MenuItem item2) {
-        super(item1.getName() + " + " + item2.getName() + " Combo", 0, item1.getPrepUnits() + item2.getPrepUnits());
+        super(item1.getName() + " + " + item2.getName() + " Combo",
+              0,
+              item1.getPrepUnits() + item2.getPrepUnits());
+
+        if (item1.getName().equalsIgnoreCase(item2.getName())) {
+            throw new IllegalArgumentException(
+                "A ComboMeal cannot contain two of the same item!"
+            );
+        }
+
         this.item1 = item1;
         this.item2 = item2;
     }
@@ -17,6 +27,18 @@ public class ComboMeal extends MenuItem {
         return item1.getPrepUnits() + item2.getPrepUnits();
     }
 
+    public String getDescription() {
+        int savings = (item1.getPrice() + item2.getPrice()) - getPrice();
+
+        return String.format(
+            "%s (Includes %s & %s) - Saves $%.2f!",
+            getName(),
+            item1.getName(),
+            item2.getName(),
+            savings / 100.0
+        );
+    }
+
     public MenuItem getItem1() {
         return item1;
     }
@@ -25,5 +47,3 @@ public class ComboMeal extends MenuItem {
         return item2;
     }
 }
-
-
