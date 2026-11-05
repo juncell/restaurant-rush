@@ -1,34 +1,35 @@
-public class Menu{
-  private MenuItem[] items;
-  private int itemCount;
-  private int size;
+public class Menu {
+    private MenuItem[] items;
+    private int itemCount;
 
-  public Menu(){
-    size = 10;
-    items = new MenuItem[size];
-    itemCount = 0;
-    
-    addItem(new MenuItem("Salad", 900,1));
-    addItem(new MenuItem("Burger", 1500,1));
-    addItem(new MenuItem("Pasta", 1800, 2));
-  }
+    public Menu() {
+        items = new MenuItem[10];
+        itemCount = 0;
 
-public void addItem(MenuItem item){
-  if (itemCount < size){
-    items[itemCount] = item;
-    itemCount++;
-  }
-}
+        addItem(new MenuItem("Salad", 900, 1));
+        addItem(new MenuItem("Burger", 1500, 1));
+        addItem(new MenuItem("Pasta", 1800, 2));
+    }
 
-public MenuItem getItem(int index){
-  if (index >= 0 && index < itemCount){
-    return items[index];
-  }
+    public void addItem(MenuItem item) {
+        if (itemCount < size()) {
+            items[itemCount] = item;
+            itemCount++;
+        }
+    }
 
-  return null;
-}
+    public MenuItem getItem(int index) {
+        if (index >= 0 && index < itemCount) {
+            return items[index];
+        }
+        return null;
+    }
 
-  public int getItemCount(){
-    return itemCount;
-  }
+    public int getItemCount() {
+        return itemCount;
+    }
+
+    public int size() {
+        return items.length;
+    }
 }
