@@ -9,8 +9,8 @@ public class CriticCustomer extends Customer {
     private final String[] preference = {"Burger", "Salad", "Pasta"};
     private final String preferredDish;
 
-    public CriticCustomer() {
-        super(); 
+    public CriticCustomer(int ID) {
+        super(ID); 
         this.discount = 0.0; 
 
         // choosing random dish as favourite

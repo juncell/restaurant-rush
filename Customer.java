@@ -7,8 +7,12 @@ public class Customer {
     protected double discount = 0.0; // overwrite this value in the child classes 
     protected int tableNumber = 0; 
     private Order currentOrder;
+    protected int customerID; 
 
-    public Customer(){}; 
+
+    public Customer(int ID){
+        this.customerID = ID; 
+    }; 
     
     public int getSatisfaction() {
         return this.satisfaction;
@@ -81,5 +85,9 @@ public class Customer {
 
     public boolean hasAbandoned() {
         return this.satisfaction == 0 && !this.served;
+    }
+
+    public int getCustomerID(){
+        return this.customerID; 
     }
 }

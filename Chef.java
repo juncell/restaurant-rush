@@ -1,7 +1,7 @@
 public class Chef extends Staff {
 
-    public Chef(String name) {
-        super(name);
+    public Chef(int ID) {
+        super(ID);
     }
 
     public boolean prepOrder(Order order) {

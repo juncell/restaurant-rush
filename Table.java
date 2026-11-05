@@ -1,12 +1,13 @@
 public class Table {
     private int tableNumber = 0; 
-    private int capacity = 0;  // for the 3 stages, capacity = 1 (default), else can scale 
+    private int capacity = 1;  // for the 3 stages, capacity = 1 (default), else can scale 
     private int seatsRemaining = 0; 
 
     // constructor 
     public Table(int tableNumber, int capacity){
         this.tableNumber = tableNumber; 
         this.capacity = capacity; 
+        this.seatsRemaining = capacity; 
     }
 
     public void assignCustomer(Customer customer){
@@ -44,5 +45,9 @@ public class Table {
         else {
             return false; 
         }
+    }
+
+    public int getTableNumber(){
+        return this.tableNumber; 
     }
 }

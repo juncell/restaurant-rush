@@ -1,16 +1,16 @@
 public abstract class Staff{
-  protected String name;
+  protected int ID;
   protected boolean hasActedThisTurn;
 
   // create constructor 
-  public Staff(String name){
-    this.name = name;
+  public Staff(int ID){
+    this.ID = ID;
     this.hasActedThisTurn = false;
   }
 
   // accessor and mutator methods
-  public String getName(){
-    return name;
+  public int getID(){
+    return ID;
   }
 
   public boolean hasActed(){
