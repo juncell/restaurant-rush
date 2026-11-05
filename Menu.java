@@ -1,9 +1,11 @@
 public class Menu{
   private MenuItem[] items;
   private int itemCount;
+  private int size;
 
   public Menu(){
-    items = new MenuItem[10];
+    size = 10;
+    items = new MenuItem[size];
     itemCount = 0;
     
     addItem(new MenuItem("Salad", 900,1));
@@ -12,7 +14,7 @@ public class Menu{
   }
 
 public void addItem(MenuItem item){
-  if (itemCount < items.length){
+  if (itemCount < size){
     items[itemCount] = item;
     itemCount++;
   }

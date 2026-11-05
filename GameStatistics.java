@@ -4,14 +4,48 @@ import java.util.OptionalDouble;
 
 /** Revenue, served count, unhappy departures, payment records and the victory check. */
 public class GameStatistics {
-    private static final int MIN_PAID_CUSTOMERS = 4;
-    private static final int MIN_REVENUE_CENTS = 4500;
-    private static final int MIN_AVG_SATISFACTION = 60;
+    // victory targets (base setting: 4 paid customers, $45.00 revenue, average satisfaction 60)
+    private int minPaidCustomers = 4;
+    private int minRevenueCents = 4500;
+    private int minAvgSatisfaction = 60;
 
     private int revenueCents;
     private int servedCount;
     private int unhappyDepartures;
     private List<PaymentRecord> payments = new ArrayList<>();
+
+    public int getMinPaidCustomers() {
+        return minPaidCustomers;
+    }
+
+    public void setMinPaidCustomers(int minPaidCustomers) {
+        if (minPaidCustomers < 0) {
+            throw new IllegalArgumentException("Minimum paid customers cannot be negative");
+        }
+        this.minPaidCustomers = minPaidCustomers;
+    }
+
+    public int getMinRevenueCents() {
+        return minRevenueCents;
+    }
+
+    public void setMinRevenueCents(int minRevenueCents) {
+        if (minRevenueCents < 0) {
+            throw new IllegalArgumentException("Minimum revenue cannot be negative");
+        }
+        this.minRevenueCents = minRevenueCents;
+    }
+
+    public int getMinAvgSatisfaction() {
+        return minAvgSatisfaction;
+    }
+
+    public void setMinAvgSatisfaction(int minAvgSatisfaction) {
+        if (minAvgSatisfaction < 0 || minAvgSatisfaction > 100) {
+            throw new IllegalArgumentException("Minimum average satisfaction must be 0 to 100");
+        }
+        this.minAvgSatisfaction = minAvgSatisfaction;
+    }
 
     public void recordPayment(PaymentRecord record) {
         payments.add(record);
@@ -47,12 +81,12 @@ public class GameStatistics {
         return payments.stream().mapToInt(PaymentRecord::getSatisfaction).average();
     }
 
-    /** Victory: at least 4 paid AND revenue at least $45.00 AND average satisfaction at least 60. */
+    /** Victory: meets the paid-customer, revenue and average-satisfaction targets. */
     public boolean isVictory() {
         OptionalDouble average = getAverageSatisfaction();
-        return getPaidCount() >= MIN_PAID_CUSTOMERS
-                && revenueCents >= MIN_REVENUE_CENTS
+        return getPaidCount() >= minPaidCustomers
+                && revenueCents >= minRevenueCents
                 && average.isPresent()
-                && average.getAsDouble() >= MIN_AVG_SATISFACTION;
+                && average.getAsDouble() >= minAvgSatisfaction;
     }
 }
