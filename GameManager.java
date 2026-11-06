@@ -79,7 +79,7 @@ public class GameManager {
         Customer arrival = schedule.getArrival(currentTurn);
         if (arrival != null) {
             restaurant.enqueue(arrival);
-            ui.showMessage("Customer " + arrival.getCustomerID() + " arrives and joins the waiting queue.");
+            ui.showMessage("Customer " + arrival.getID() + " arrives and joins the waiting queue.");
         }
     }
 
@@ -89,16 +89,16 @@ public class GameManager {
      */
     private void handleWaiterTask() {
         while (true) {
-            int action = ui.promptWaiterAction();   // 1 Seat, 2 Take order, 3 Serve, 4 Wait
+            WaiterAction action = ui.promptWaiterAction();   // 1 Seat, 2 Take order, 3 Serve, 4 Wait
             String error;
             switch (action) {
-                case 1:
+                case SEAT_CUSTOMER:
                     error = trySeat();
                     break;
-                case 2:
+                case TAKE_ORDER:
                     error = tryTakeOrder();
                     break;
-                case 3:
+                case SERVE_ORDER:
                     error = tryServe();
                     break;
                 default:
@@ -129,7 +129,7 @@ public class GameManager {
             return "The waiter could not seat that customer.";
         }
         restaurant.seat(customer, table);
-        ui.showMessage("Waiter seats customer " + customer.getCustomerID() + " at table " + tableNumber + ".");
+        ui.showMessage("Waiter seats customer " + customer.getID() + " at table " + tableNumber + ".");
         return null;
     }
 
@@ -146,7 +146,7 @@ public class GameManager {
         if (order == null) {
             return "The waiter could not take that order.";
         }
-        ui.showMessage("Customer " + customer.getCustomerID() + " orders " + choice.getName() + ".");
+        ui.showMessage("Customer " + customer.getID() + " orders " + choice.getName() + ".");
         return null;
     }
 
@@ -164,7 +164,7 @@ public class GameManager {
         }
         servedTurn.put(customer, currentTurn);
         stats.recordServed();
-        ui.showMessage("Waiter serves customer " + customer.getCustomerID() + ". Order is SERVED.");
+        ui.showMessage("Waiter serves customer " + customer.getID() + ". Order is SERVED.");
         return null;
     }
 
@@ -174,7 +174,7 @@ public class GameManager {
      */
     private MenuItem chooseItemFor(Customer customer) {
         Menu menu = restaurant.getMenu();
-        return menu.getItem((customer.getCustomerID() - 1) % menu.size());
+        return menu.getItem((customer.getID() - 1) % menu.size());
     }
 
     /**
@@ -228,7 +228,7 @@ public class GameManager {
         for (Customer customer : restaurant.getSeatedCustomers()) {
             Integer ready = readyToPayTurn.get(customer);
             if (customer.isReadyToPay() && ready != null && ready < currentTurn
-                    && (payer == null || customer.getCustomerID() < payer.getCustomerID())) {
+                    && (payer == null || customer.getID() < payer.getID())) {
                 payer = customer;
             }
         }
@@ -237,10 +237,10 @@ public class GameManager {
         }
         Order order = payer.getCurrentOrder();
         if (cashier.processPayment(order)) {
-            stats.recordPayment(new PaymentRecord(payer.getCustomerID(), order.getLockedPriceCents(),
+            stats.recordPayment(new PaymentRecord(payer.getID(), order.getLockedPriceCents(),
                     payer.getSatisfaction(), currentTurn));
             restaurant.release(payer);
-            ui.showMessage("Cashier collects payment from customer " + payer.getCustomerID()
+            ui.showMessage("Cashier collects payment from customer " + payer.getID()
                     + ". Satisfaction " + payer.getSatisfaction() + " is recorded. Table freed.");
         }
     }
@@ -260,7 +260,7 @@ public class GameManager {
                 }
                 restaurant.release(customer);
                 stats.recordUnhappyDeparture();
-                ui.showMessage("Customer " + customer.getCustomerID() + " runs out of patience and leaves.");
+                ui.showMessage("Customer " + customer.getID() + " runs out of patience and leaves.");
             }
         }
     }
