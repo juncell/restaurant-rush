@@ -1,5 +1,5 @@
-
 public class ComboMeal extends MenuItem {
+
     private final MenuItem item1;
     private final MenuItem item2;
 
@@ -27,7 +27,7 @@ public class ComboMeal extends MenuItem {
         return item1.getPrepUnits() + item2.getPrepUnits();
     }
 
-    public String getDescription() {
+    public String getDetailedBreakdown() {
         int savings = (item1.getPrice() + item2.getPrice()) - getPrice();
 
         return String.format(
