@@ -66,12 +66,12 @@ public class GameManager {
         }
 
         processArrival();                                   // Step 1
-        ui.displayTurnStart(currentTurn, restaurant, stats);
+        ui.displayTurnStart(currentTurn, maxTurns, restaurant, stats);
         handleWaiterTask();                                 // Steps 2-3: the Waiter acts first,
         handleChefTask();                                   //            then the Chef
         processEatingAndPayment();                          // Step 4
         processWaitingAndAbandonment();                     // Step 5
-        ui.displayTurnEnd(currentTurn, stats);
+        ui.displayTurnEnd(currentTurn, maxTurns, stats);
     }
 
     /** Step 1: the scheduled customer joins the waiting queue with satisfaction 100. */
