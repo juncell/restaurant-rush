@@ -41,22 +41,24 @@ The player's role is the restaurant manager.
 ## Stage 3 
 ### Specifications 
 1. Host: either host or waiter can seat the hosts, but host cannot do any other tasks than right. Can only seat 1 customer per turn
-*Additional Feature*
-Gives a seated customer an immediate +5 satisfaction boost and suggest who to seat next based on the lowest satisfaction rate.
-3. Combo Meal: made of 2 existing menu items.
-*Additional Feature*
-Avoid making a combo that consist of two of the same items, and format item breakdown with total dollar savings. 
-5. Happy hour: additional 20% discount and an increment of satisfaction points (rather than decrement). 
+2. Combo Meal: made of 2 existing menu items.
+3. Happy hour: additional 20% discount and an increment of satisfaction points (rather than decrement).
 
-### Classes implemeneted 
+### Classes implemented 
 * `ComboMeal`: subclasses `MenuItem` overrides `getPrice()` and `getPrepUnits()` using Composite.
 * `HappyHour`: provides an additional 20% discount and +15 satisfaction recovery. 
 * `Host`: extends the `Staff` class.
 * `Menu`: Holds available base items and combos in an array. 
 ![alt text](image-2.png)
 
-
 ### UML Diagram 
+
+## Stage 4 (additional features implemented)
+### Specifications
+1. Host: Gives a seated customer an immediate +5 satisfaction boost and suggest who to seat next based on the lowest satisfaction rate.
+2. Combo Meal: Avoid making a combo that consist of two of the same items, and format item breakdown with total dollar savings. 
+
+
 
 
 
