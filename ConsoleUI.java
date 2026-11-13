@@ -69,7 +69,7 @@ public class ConsoleUI{
 		System.out.println("  RESTAURANT RUSH - you are the manager");
 		System.out.println(LINE);
 		System.out.println("You have " + maxTurns + " turns. Customers choose their own food from this menu:");
-		for (int i = 0; i < menu.size(); i++) {
+		for (int i = 0; i < menu.getItemCount(); i++) {
 			MenuItem item = menu.getItem(i);
 			System.out.println(" - " + item.getName() + " " + formatMoney(item.getPrice()) + " (" + item.getPrepUnits() + " prep unit" + (item.getPrepUnits() > 1 ? "s" : "") + ")");
 		}
@@ -131,6 +131,17 @@ public class ConsoleUI{
 			String who = "free";
 			if (table instanceof GroupTable && ((GroupTable) table).getParty() != null) {
 				who = "occupied by " + label(((GroupTable) table).getParty());
+			} else if (table instanceof GroupTable && !((GroupTable) table).getIndividuals().isEmpty()) {
+				// Stage 4: individuals sharing a table with strangers
+				StringBuilder names = new StringBuilder();
+				for (Customer customer : ((GroupTable) table).getIndividuals()) {
+					if (names.length() > 0) {
+						names.append(", ");
+					}
+					names.append(label(customer));
+				}
+				int free = table.get_seatsRemaining();
+				who = "shared by " + names + " - " + (free == 0 ? "full" : free + " seat(s) free for individuals");
 			} else if (table.isOccupied()) {
 				who = "occupied";
 			}
@@ -230,6 +241,19 @@ public class ConsoleUI{
 	 * Customer -> Regular, VIPCustomer -> VIP
 	 */
 	private String label(Customer customer) {
+		// Stage 4: a party shows its size and each member's type, e.g. "G2 (party of 3: VIP, Regular, Critic)"
+		if (customer instanceof CustomerGroup) {
+			CustomerGroup group = (CustomerGroup) customer;
+			StringBuilder types = new StringBuilder();
+			for (Customer member : group.getMembers()) {
+				if (types.length() > 0) {
+					types.append(", ");
+				}
+				String t = member.getClass().getSimpleName().replace("Customer", "");
+				types.append(t.isEmpty() ? "Regular" : t);
+			}
+			return "G" + group.getID() + " (party of " + group.getPartySize() + ": " + types + ")";
+		}
 		String type = customer.getClass().getSimpleName().replace("Customer", "");
 		return "C" + customer.getID() + " (" + (type.isEmpty() ? "Regular" : type) + ")";
 	}

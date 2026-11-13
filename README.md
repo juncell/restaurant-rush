@@ -57,6 +57,10 @@ The player's role is the restaurant manager.
 ### Specifications
 1. Host: Gives a seated customer an immediate +5 satisfaction boost and suggest who to seat next based on the lowest satisfaction rate.
 2. Combo Meal: Avoid making a combo that consist of two of the same items, and format item breakdown with total dollar savings. 
+3. Group seating (`Stage4Main` / `Stage4GameManager`): random number of tables (2-4) with random capacities (2-6). Arrivals (same turns as Stages 1-3) are either an individual customer (`C`) or a party (`G`, a `CustomerGroup`).
+   * Individuals follow Stage 1-3 rules (own order, own bill) and may share a `GroupTable` with strangers until it is full.
+   * Parties need an empty table big enough for all members, never share, and place one `GroupOrder`.
+   * Run `java Stage4Main [seed]` for mixed arrivals, or `java Stage4Main [seed] --groups-only` for parties only.
 
 
 

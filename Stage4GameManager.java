@@ -9,6 +9,9 @@ import java.util.Random;
 - CustomerGroup = mixed regular/vip/critic or just a homogenous group is randomly generated 
 - 1 group sits at a table with enough seats 
 - GroupOrder: combined order for all members in the table
+- Mixed mode (default): arrivals are either individuals or groups
+    - an individual follows the Stage 1-3 rules (1 seat, own order, own bill) and may share a table with strangers
+    - a group still needs an empty table of its own; strangers never join a group's table
  */
 
 public class Stage4GameManager {
@@ -28,14 +31,21 @@ public class Stage4GameManager {
     private final Cashier cashier;
     private final Stage4ArrivalSchedule schedule;
     private final GameStatistics stats;
+    private final boolean allowIndividuals;
 
     private final Map<Customer, Integer> servedTurn = new HashMap<>();
     private final Map<Customer, Integer> readyToPayTurn = new HashMap<>();
 
     /** @param seed the same seed always gives the same tables, parties and dish choices (reproducible runs) */
     public Stage4GameManager(ConsoleUI ui, long seed) {
+        this(ui, seed, true);
+    }
+
+    /** @param allowIndividuals true = individuals and groups arrive (mixed); false = groups only (original Stage 4) */
+    public Stage4GameManager(ConsoleUI ui, long seed, boolean allowIndividuals) {
         this.ui = ui;
         this.random = new Random(seed);
+        this.allowIndividuals = allowIndividuals;
 
         // randomly assign the number of tables and each table's capacity
         int numberOfTables = MIN_TABLES + random.nextInt(MAX_TABLES - MIN_TABLES + 1);
@@ -51,7 +61,7 @@ public class Stage4GameManager {
         this.waiter = new Waiter(1);
         this.chef = new Chef(2);
         this.cashier = new Cashier(3);
-        this.schedule = new Stage4ArrivalSchedule(random, largest);   // every party fits the biggest table
+        this.schedule = new Stage4ArrivalSchedule(random, largest, allowIndividuals);   // every party fits the biggest table
         this.stats = new GameStatistics();
     }
 
@@ -64,7 +74,12 @@ public class Stage4GameManager {
 
     public void run() {
         ui.displayWelcome(restaurant.getMenu(), maxTurns);
-        ui.showMessage("Stage 4: parties arrive together and share one table. Table layout tonight:");
+        if (allowIndividuals) {
+            ui.showMessage("Stage 4: individuals (C) may share a table with strangers; parties (G) need a table"
+                    + " of their own. Table layout tonight:");
+        } else {
+            ui.showMessage("Stage 4: parties arrive together and share one table. Table layout tonight:");
+        }
         ui.displayTableLayout(restaurant);
         for (currentTurn = 1; currentTurn <= maxTurns; currentTurn++) {
             playTurn();
@@ -93,12 +108,22 @@ public class Stage4GameManager {
     }
 
     private void processArrival() {
-        CustomerGroup party = schedule.getArrival(currentTurn);
-        if (party != null) {
-            restaurant.enqueue(party);
-            ui.showMessage("Party G" + party.getID() + " of " + party.getPartySize()
-                    + " arrives and joins the waiting queue.");
+        Customer arrival = schedule.getArrival(currentTurn);
+        if (arrival == null) {
+            return;
         }
+        restaurant.enqueue(arrival);
+        if (arrival instanceof CustomerGroup) {
+            ui.showMessage("Party G" + arrival.getID() + " of " + ((CustomerGroup) arrival).getPartySize()
+                    + " arrives and joins the waiting queue.");
+        } else {
+            ui.showMessage("Customer C" + arrival.getID() + " arrives alone and joins the waiting queue.");
+        }
+    }
+
+    // "party G2" or "customer C3", for messages
+    private static String describe(Customer customer) {
+        return (customer instanceof CustomerGroup) ? "party G" + customer.getID() : "customer C" + customer.getID();
     }
 
     private void handleWaiterTask() {
@@ -127,9 +152,9 @@ public class Stage4GameManager {
     }
 
     private String trySeat() {
-        Customer party = restaurant.findCustomer(ui.promptCustomerId("Seat which party?"));
-        if (party == null || !restaurant.getWaitingQueue().contains(party)) {
-            return "That party is not in the waiting queue.";
+        Customer customer = restaurant.findCustomer(ui.promptCustomerId("Seat which customer/party?"));
+        if (customer == null || !restaurant.getWaitingQueue().contains(customer)) {
+            return "That customer/party is not in the waiting queue.";
         }
         int tableNumber = ui.promptTableNumber();
         Table table = restaurant.findTable(tableNumber);
@@ -140,28 +165,36 @@ public class Stage4GameManager {
             return "Table " + tableNumber + " is occupied.";
         }
         GroupTable groupTable = (GroupTable) table;
-        if (!groupTable.canSeat(party)) {
+        if (!groupTable.canSeat(customer)) {
+            if (customer instanceof CustomerGroup && !groupTable.isEmpty()) {
+                return "Table " + tableNumber + " is shared by other customers; a party needs a table of its own.";
+            }
             return "Table " + tableNumber + " only seats " + groupTable.getCapacity()
-                    + " but the party has " + GroupTable.seatsNeeded(party) + ".";
+                    + " but the party has " + GroupTable.seatsNeeded(customer) + ".";
         }
-        if (!waiter.seatCustomer(party, table)) {   // GroupTable.assignCustomer seats every member
-            return "The waiter could not seat that party.";
+        if (!waiter.seatCustomer(customer, table)) {   // GroupTable.assignCustomer seats every member of a party
+            return "The waiter could not seat that customer/party.";
         }
-        restaurant.seat(party, table);
-        ui.showMessage("Waiter seats party G" + party.getID() + " at table " + tableNumber + ".");
+        restaurant.seat(customer, table);
+        String sharing = (customer instanceof CustomerGroup || groupTable.getIndividuals().size() == 1)
+                ? "" : " (sharing with other customers)";
+        ui.showMessage("Waiter seats " + describe(customer) + " at table " + tableNumber + sharing + ".");
         return null;
     }
 
     private String tryTakeOrder() {
-        Customer customer = restaurant.findCustomer(ui.promptCustomerId("Take whose order? (party)"));
-        if (!(customer instanceof CustomerGroup) || restaurant.getTableOf(customer) == null) {
-            return "That party is not seated.";
+        Customer customer = restaurant.findCustomer(ui.promptCustomerId("Take whose order? (customer/party)"));
+        if (customer == null || restaurant.getTableOf(customer) == null) {
+            return "That customer/party is not seated.";
         }
         if (customer.getCurrentOrder() != null) {
-            return "That party has already ordered.";
+            return "That customer/party has already ordered.";
         }
         if (waiter.hasActed()) {
             return "The waiter has already acted this turn.";
+        }
+        if (!(customer instanceof CustomerGroup)) {
+            return takeIndividualOrder(customer);
         }
         CustomerGroup party = (CustomerGroup) customer;
         List<MenuItem> choices = new ArrayList<>();
@@ -180,6 +213,18 @@ public class Stage4GameManager {
         return null;
     }
 
+    // an individual orders one dish for themselves, exactly as in Stages 1-3
+    private String takeIndividualOrder(Customer customer) {
+        MenuItem choice = chooseItemFor(customer);
+        Order order = waiter.takeOrder(customer, choice, null);   // no Happy Hour in Stage 4 base run
+        if (order == null) {
+            return "The waiter could not take that order.";
+        }
+        ui.showMessage("Customer C" + customer.getID() + " orders " + choice.getName()
+                + String.format(" ($%.2f)", order.getLockedPriceCents() / 100.0) + ".");
+        return null;
+    }
+
     private MenuItem chooseItemFor(Customer member) {
         Menu menu = restaurant.getMenu();
         if (member instanceof CriticCustomer) {
@@ -194,9 +239,9 @@ public class Stage4GameManager {
     }
 
     private String tryServe() {
-        Customer party = restaurant.findCustomer(ui.promptCustomerId("Serve which party?"));
+        Customer party = restaurant.findCustomer(ui.promptCustomerId("Serve which customer/party?"));
         if (party == null || party.getCurrentOrder() == null) {
-            return "That party has no order.";
+            return "That customer/party has no order.";
         }
         Order order = party.getCurrentOrder();
         if (!order.canBeServed()) {
@@ -207,7 +252,7 @@ public class Stage4GameManager {
         }
         servedTurn.put(party, currentTurn);
         stats.recordServed();
-        ui.showMessage("Waiter serves party G" + party.getID() + ". Order is SERVED.");
+        ui.showMessage("Waiter serves " + describe(party) + ". Order is SERVED.");
         return null;
     }
 
@@ -221,14 +266,14 @@ public class Stage4GameManager {
             Customer party = restaurant.findCustomer(partyId);
             Order order = (party == null) ? null : party.getCurrentOrder();
             if (order == null) {
-                ui.showError("That party has no order to prepare.");
+                ui.showError("That customer/party has no order to prepare.");
             } else if (order.getStatus() != Order.Status.PLACED) {
                 ui.showError("That order is already " + order.getStatus() + ".");
             } else if (chef.prepOrder(order)) {
                 if (order.getStatus() == Order.Status.READY) {
-                    ui.showMessage("Chef finishes party G" + partyId + "'s order. Order is READY.");
+                    ui.showMessage("Chef finishes " + describe(party) + "'s order. Order is READY.");
                 } else {
-                    ui.showMessage("Chef works on party G" + partyId + "'s order ("
+                    ui.showMessage("Chef works on " + describe(party) + "'s order ("
                             + order.getRemainingPrepUnits() + " unit(s) left).");
                 }
                 return;
@@ -262,9 +307,11 @@ public class Stage4GameManager {
         if (cashier.processPayment(order)) {
             stats.recordPayment(new PaymentRecord(payer.getID(), order.getLockedPriceCents(),
                     payer.getSatisfaction(), currentTurn));
-            restaurant.release(payer);   // GroupTable frees every seat
-            ui.showMessage("Cashier collects the group bill from party G" + payer.getID()
-                    + ". Satisfaction " + payer.getSatisfaction() + " is recorded. Table freed.");
+            restaurant.release(payer);   // a party frees every seat; an individual frees only their own seat
+            String bill = (payer instanceof CustomerGroup) ? "the group bill" : "payment";
+            String freed = (payer instanceof CustomerGroup) ? "Table freed." : "Seat freed.";
+            ui.showMessage("Cashier collects " + bill + " from " + describe(payer)
+                    + ". Satisfaction " + payer.getSatisfaction() + " is recorded. " + freed);
         }
     }
 
@@ -279,7 +326,11 @@ public class Stage4GameManager {
                 }
                 restaurant.release(party);
                 stats.recordUnhappyDeparture();
-                ui.showMessage("Party G" + party.getID() + " runs out of patience and leaves together.");
+                if (party instanceof CustomerGroup) {
+                    ui.showMessage("Party G" + party.getID() + " runs out of patience and leaves together.");
+                } else {
+                    ui.showMessage("Customer C" + party.getID() + " runs out of patience and leaves.");
+                }
             }
         }
     }

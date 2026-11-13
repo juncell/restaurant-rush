@@ -10,11 +10,15 @@ public class CriticCustomer extends Customer {
     private final String preferredDish;
 
     public CriticCustomer(int ID) {
+        this(ID, new Random());
+    }
+
+    // Stage 4: pass the game's seeded Random so the critic's favourite dish is reproducible
+    public CriticCustomer(int ID, Random random) {
         super(ID); 
         this.discount = 0.0; 
 
         // choosing random dish as favourite
-        Random random = new Random(); 
         int randInt = random.nextInt(this.preference.length); 
         this.preferredDish = this.preference[randInt];  
     }
