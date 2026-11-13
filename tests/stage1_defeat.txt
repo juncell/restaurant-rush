@@ -1,0 +1,63 @@
+# TEST S1-DEFEAT (Stage 1, base setting: 18 turns, 2 tables, arrivals on turns 1, 4, 7, 10, 13, 16)
+# Purpose           : reproducible DEFEAT run. The manager makes Waiter and Chef wait on every turn.
+# Expected end state: 0 paid, revenue $0.00, avg satisfaction N/A, 2 unhappy departures
+#                     (C1 leaves at the end of turn 13, C2 at the end of turn 16)
+# Run               : java Main tests/stage1_defeat.txt
+# Format            : one input per line.  
+#                     Each turn = 2 lines: Waiter choice (0 = wait), 
+#                                          Chef choice (0 = wait).
+
+# Turn 1
+0
+0
+# Turn 2
+0
+0
+# Turn 3
+0
+0
+# Turn 4
+0
+0
+# Turn 5
+0
+0
+# Turn 6
+0
+0
+# Turn 7
+0
+0
+# Turn 8
+0
+0
+# Turn 9
+0
+0
+# Turn 10
+0
+0
+# Turn 11
+0
+0
+# Turn 12
+0
+0
+# Turn 13
+0
+0
+# Turn 14
+0
+0
+# Turn 15
+0
+0
+# Turn 16
+0
+0
+# Turn 17
+0
+0
+# Turn 18
+0
+0
