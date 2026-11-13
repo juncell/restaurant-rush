@@ -123,6 +123,21 @@ public class ConsoleUI{
 		}
 	}
 	
+	//Stage 4: shows every table's capacity and who (if anyone) sits there
+	public void displayTableLayout(Restaurant restaurant) {
+		System.out.println("Tables:");
+		for (Table table : restaurant.getTables()) {
+			String size = (table instanceof GroupTable) ? " (seats " + ((GroupTable) table).getCapacity() + ")" : "";
+			String who = "free";
+			if (table instanceof GroupTable && ((GroupTable) table).getParty() != null) {
+				who = "occupied by " + label(((GroupTable) table).getParty());
+			} else if (table.isOccupied()) {
+				who = "occupied";
+			}
+			System.out.println("  T" + table.getTableNumber() + size + ": " + who);
+		}
+	}
+	
 	public void showMessage(String message) {
 		System.out.println("  > " + message);
 	}

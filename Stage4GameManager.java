@@ -10,6 +10,7 @@ import java.util.Random;
 - 1 group sits at a table with enough seats 
 - GroupOrder: combined order for all members in the table
  */
+
 public class Stage4GameManager {
     private static final int MIN_TABLES = 2;
     private static final int MAX_TABLES = 4;
