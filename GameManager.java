@@ -174,7 +174,7 @@ public class GameManager {
      */
     private MenuItem chooseItemFor(Customer customer) {
         Menu menu = restaurant.getMenu();
-        return menu.getItem((customer.getID() - 1) % menu.size());
+        return menu.getItem((customer.getID() - 1) % menu.getItemCount());
     }
 
     /**
