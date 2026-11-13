@@ -19,6 +19,12 @@ public class Restaurant {
         this.menu = menu;
     }
 
+    // Stage 4 constructor: uses the given tables (e.g. GroupTables with random capacities), numbered 1..n
+    public Restaurant(List<? extends Table> tables, Menu menu) {
+        this.tables.addAll(tables);
+        this.menu = menu;
+    }
+
     // a new arrival joins the end of the waiting queue
     public void enqueue(Customer customer) {
         this.waitingQueue.add(customer);
