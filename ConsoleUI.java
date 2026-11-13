@@ -200,7 +200,7 @@ public class ConsoleUI{
 	
 	// Converts cents to dollars, e.g. 2430 -> "$24.30".
 	private String formatMoney(int cents) {
-		return String.format("$%d. %02d", cents / 100, cents % 100);
+		return String.format("$%d.%02d", cents / 100, cents % 100);
 	}
 	
 	private String formatAverage(OptionalDouble avg) {
