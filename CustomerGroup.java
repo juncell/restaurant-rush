@@ -37,17 +37,20 @@ public class CustomerGroup extends Customer {
         int size = random.nextInt((maxSize - minSize) + 1) + minSize;
         List<Customer> generated = new ArrayList<>();
         for (int i = 1; i <= size; i++) {
-            int memberID = groupID * 100 + i;
-            int roll = random.nextInt(3);
-            if (roll == 0) {
-                generated.add(new Customer(memberID));
-            } else if (roll == 1) {
-                generated.add(new VIPCustomer(memberID));
-            } else {
-                generated.add(new CriticCustomer(memberID));
-            }
+            generated.add(randomCustomer(groupID * 100 + i, random));
         }
         return new CustomerGroup(groupID, generated);
+    }
+
+    /** One customer of a random type (Regular / VIP / Critic); also used for Stage 4 individual arrivals. */
+    public static Customer randomCustomer(int customerID, Random random) {
+        int roll = random.nextInt(3);
+        if (roll == 0) {
+            return new Customer(customerID);
+        } else if (roll == 1) {
+            return new VIPCustomer(customerID);
+        }
+        return new CriticCustomer(customerID, random);
     }
 
     // read-only view of the members

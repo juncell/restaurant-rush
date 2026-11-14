@@ -87,7 +87,7 @@ public class Restaurant {
         this.waitingQueue.remove(customer);
         Table table = this.seating.remove(customer);
         if (table != null) {
-            table.removeCustomer();
+            table.removeCustomer(customer);   // only this customer's seat(s); strangers sharing the table stay
         }
     }
 }

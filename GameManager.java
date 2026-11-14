@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Controller for one game of Restaurant Rush (Stage 1).
- * Runs all 18 turns and calls the six turn steps in order:
- * 1 arrivals, 2-3 Waiter then Chef, 4 eating and payment, 5 waiting and abandonment, 6 result.
+ * Controller for Restaurant Rush (Stage 3: includes Stage 1, Stage 2 VIP/Critic,
+ * and Stage 3 Host, ComboMeal, and Happy Hour).
  */
 public class GameManager {
     private int maxTurns = 18;   // base setting: 18 turns
@@ -15,13 +14,14 @@ public class GameManager {
     private int currentTurn;
     private final ConsoleUI ui;
     private final Restaurant restaurant;
+    private final Host host;
     private final Waiter waiter;
     private final Chef chef;
     private final Cashier cashier;
+    private final HappyHour happyHour;
     private final ArrivalSchedule schedule;
     private final GameStatistics stats;
 
-    // Turn stamps for the eating and payment delays (Customer only stores true/false flags)
     private final Map<Customer, Integer> servedTurn = new HashMap<>();
     private final Map<Customer, Integer> readyToPayTurn = new HashMap<>();
 
@@ -31,6 +31,8 @@ public class GameManager {
         this.waiter = new Waiter(1);
         this.chef = new Chef(2);
         this.cashier = new Cashier(3);
+        this.host = new Host(4);
+        this.happyHour = new HappyHour();
         this.schedule = new ArrivalSchedule();
         this.stats = new GameStatistics();
     }
@@ -39,7 +41,6 @@ public class GameManager {
         return this.maxTurns;
     }
 
-    /** Changes the number of turns; call before run(). Must be at least 1. */
     public void setMaxTurns(int maxTurns) {
         if (maxTurns < 1) {
             throw new IllegalArgumentException("Max turns must be at least 1");
@@ -47,8 +48,8 @@ public class GameManager {
         this.maxTurns = maxTurns;
     }
 
-    /** Plays all the turns (there is no early ending), then shows the result. */
     public void run() {
+        ui.displayWelcome(restaurant.getMenu(), maxTurns);
         for (currentTurn = 1; currentTurn <= maxTurns; currentTurn++) {
             playTurn();
         }
@@ -56,6 +57,7 @@ public class GameManager {
     }
 
     private void playTurn() {
+        host.resetTurn();
         waiter.resetTurn();
         chef.resetTurn();
         cashier.resetTurn();
@@ -65,12 +67,18 @@ public class GameManager {
             }
         }
 
-        processArrival();                                   // Step 1
+        processArrival();                                   // Step 1: Arrivals
         ui.displayTurnStart(currentTurn, maxTurns, restaurant, stats);
-        handleWaiterTask();                                 // Steps 2-3: the Waiter acts first,
-        handleChefTask();                                   //            then the Chef
-        processEatingAndPayment();                          // Step 4
-        processWaitingAndAbandonment();                     // Step 5
+        handleHappyHourStartOfTurn();                       // Stage 3: Happy Hour prompt & +15 recovery
+        handleHostTask();                                   // Stage 3: Host seats up to 1 customer
+        handleWaiterTask();                                 // Steps 2-3: Waiter acts first,
+        handleChefTask();                                   //            then Chef
+        processEatingAndPayment();                          // Step 4: Eating & Cashier
+        processWaitingAndAbandonment();                     // Step 5: Satisfaction loss & abandonment
+
+        if (happyHour.isActive()) {
+            happyHour.advanceTurn();
+        }
         ui.displayTurnEnd(currentTurn, maxTurns, stats);
     }
 
@@ -79,17 +87,71 @@ public class GameManager {
         Customer arrival = schedule.getArrival(currentTurn);
         if (arrival != null) {
             restaurant.enqueue(arrival);
-            ui.showMessage("Customer " + arrival.getID() + " arrives and joins the waiting queue.");
+            String type = arrival.getClass().getSimpleName().replace("Customer", "");
+            if (type.isEmpty()) {
+                type = "Regular";
+            }
+            ui.showMessage("Customer " + arrival.getID() + " (" + type + ") arrives and joins the waiting queue.");
         }
     }
 
-    /**
-     * Steps 2-3 for the Waiter: at most one task, or Wait.
-     * An invalid choice explains why and asks again, without using up the Waiter's task.
-     */
+    /** Stage 3: Manager may activate Happy Hour once per game at turn start; active turns recover +15 satisfaction. */
+    private void handleHappyHourStartOfTurn() {
+        ui.displayHappyHourStatus(happyHour);
+        if (!happyHour.isUsedOnce()) {
+            if (ui.promptYesNo("Activate Happy Hour now? (lasts this turn and next)")) {
+                happyHour.activate();
+                ui.showMessage("Happy Hour ACTIVATED! (2 turns remaining)");
+            }
+        }
+        if (happyHour.isActive()) {
+            for (Customer c : restaurant.getWaitingQueue()) {
+                c.applyHappyHourRecovery();
+            }
+            for (Customer c : restaurant.getSeatedCustomers()) {
+                c.applyHappyHourRecovery();
+            }
+            ui.showMessage("Happy Hour boosts waiting/unserved customers' satisfaction by +15 (max 100).");
+        }
+    }
+
+    /** Stage 3: Host seats at most one queued customer per turn, in addition to the Waiter. */
+    private void handleHostTask() {
+        while (true) {
+            int customerId = ui.promptHostTarget();   // 0 = Wait
+            if (customerId == 0) {
+                ui.showMessage("Host waits.");
+                return;
+            }
+            Customer customer = restaurant.findCustomer(customerId);
+            if (customer == null || !restaurant.getWaitingQueue().contains(customer)) {
+                ui.showError("That customer is not in the waiting queue.");
+                continue;
+            }
+            int tableNumber = ui.promptTableNumber();
+            Table table = restaurant.findTable(tableNumber);
+            if (table == null) {
+                ui.showError("There is no table " + tableNumber + ".");
+                continue;
+            }
+            if (table.isOccupied()) {
+                ui.showError("Table " + tableNumber + " is occupied.");
+                continue;
+            }
+            if (!host.seatCustomer(customer, table)) {
+                ui.showError("The host could not seat that customer.");
+                continue;
+            }
+            restaurant.seat(customer, table);
+            ui.showMessage("Host seats customer " + customer.getID() + " at table " + tableNumber + ".");
+            return;
+        }
+    }
+
+    /** Steps 2-3 for the Waiter: at most one task, or Wait. */
     private void handleWaiterTask() {
         while (true) {
-            WaiterAction action = ui.promptWaiterAction();   // 1 Seat, 2 Take order, 3 Serve, 4 Wait
+            WaiterAction action = ui.promptWaiterAction();
             String error;
             switch (action) {
                 case SEAT_CUSTOMER:
@@ -142,11 +204,12 @@ public class GameManager {
             return "That customer has already ordered.";
         }
         MenuItem choice = chooseItemFor(customer);
-        Order order = waiter.takeOrder(customer, choice, null);   // null: no Happy Hour in Stage 1
+        Order order = waiter.takeOrder(customer, choice, happyHour);
         if (order == null) {
             return "The waiter could not take that order.";
         }
-        ui.showMessage("Customer " + customer.getID() + " orders " + choice.getName() + ".");
+        ui.showMessage("Customer " + customer.getID() + " orders " + choice.getName()
+                + String.format(" ($%.2f).", order.getLockedPriceCents() / 100.0));
         return null;
     }
 
@@ -169,21 +232,17 @@ public class GameManager {
     }
 
     /**
-     * Documented deterministic rule: customer n orders menu item (n - 1) mod menu size,
-     * so Salad, Burger, Pasta, Salad, Burger, Pasta.
+     * Documented deterministic rule: customer n orders menu item (n - 1) mod menu size.
+     * With 6 menu items (3 single dishes + 3 combos), C1-C3 order single dishes and C4-C6 order combos.
      */
     private MenuItem chooseItemFor(Customer customer) {
         Menu menu = restaurant.getMenu();
         return menu.getItem((customer.getID() - 1) % menu.getItemCount());
     }
 
-    /**
-     * Steps 2-3 for the Chef: advance one order by one preparation unit, or Wait.
-     * Runs after the Waiter, so the Chef can work on an order taken this turn.
-     */
     private void handleChefTask() {
         while (true) {
-            int customerId = ui.promptChefTarget();   // 0 = Wait
+            int customerId = ui.promptChefTarget();
             if (customerId == 0) {
                 ui.showMessage("Chef waits.");
                 return;
@@ -210,11 +269,6 @@ public class GameManager {
         }
     }
 
-    /**
-     * Step 4: a customer served on an earlier turn finishes eating and becomes ready to pay.
-     * The Cashier then handles at most one customer who became ready to pay on an earlier turn,
-     * oldest (lowest ID) first.
-     */
     private void processEatingAndPayment() {
         for (Customer customer : restaurant.getSeatedCustomers()) {
             Integer served = servedTurn.get(customer);
@@ -245,15 +299,11 @@ public class GameManager {
         }
     }
 
-    /**
-     * Step 5: every waiting or seated customer who has not been served loses satisfaction.
-     * A customer who reaches 0 leaves without paying: their order is cancelled and their table freed.
-     */
     private void processWaitingAndAbandonment() {
         List<Customer> present = new ArrayList<>(restaurant.getWaitingQueue());
         present.addAll(restaurant.getSeatedCustomers());
         for (Customer customer : present) {
-            customer.satisfactionLoss();   // does nothing once the customer is served
+            customer.satisfactionLoss();
             if (customer.hasAbandoned()) {
                 if (customer.getCurrentOrder() != null) {
                     customer.getCurrentOrder().cancel();
@@ -265,7 +315,6 @@ public class GameManager {
         }
     }
 
-    /** Step 6: after turn 18, Victory only if all three targets are met. */
     private void showResult() {
         ui.displayFinalResult(stats.isVictory(), stats);
     }
