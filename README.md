@@ -16,6 +16,7 @@ The player's role is the restaurant manager.
 6. [Sequence Diagram](#sequence-diagram)
 7. [Video Timestamps](#video-timestamps)
 8. [Design Discussion](#design-discussion)
+9. [Individual Reflection](#individual-reflection)
 
 
 ## How to Play 
@@ -207,3 +208,4 @@ However, this has resulted in the code being much better organised. Code structu
 ### 4. Player Choices & Game Outcomes
 - Strategic deployment of the `Host`, purchasing `ComboMeal` items during `HappyHour`, and managing customer tiers directly affect table turnaround times, average satisfaction ($\ge 60$), revenue ($\ge 45.00$), and final victory evaluation (`GameStatistics.isVictory()`).
 
+## Individual Reflection
