@@ -90,4 +90,12 @@ public class Customer {
     public int getID(){
         return this.customerID; 
     }
+
+    /**
+     * Documented deterministic rule: Regular and VIP customers choose menu item (ID - 1) mod menu size.
+     * Subclasses (such as CriticCustomer) override this to define their own order preference.
+     */
+    public MenuItem chooseDish(Menu menu) {
+        return menu.getItem((this.customerID - 1) % menu.getItemCount());
+    }
 }

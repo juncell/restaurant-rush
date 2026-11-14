@@ -3,6 +3,10 @@ public class Menu {
     private int itemCount;
 
     public Menu() {
+        this(true);
+    }
+
+    public Menu(boolean includeCombos) {
         items = new MenuItem[10];
         itemCount = 0;
 
@@ -15,9 +19,11 @@ public class Menu {
         addItem(pasta);
 
         // Stage 3: ComboMeals (90% combined price, summed prep units)
-        addItem(new ComboMeal(salad, burger)); // $21.60, 2 units
-        addItem(new ComboMeal(salad, pasta));  // $24.30, 3 units
-        addItem(new ComboMeal(burger, pasta)); // $29.70, 3 units
+        if (includeCombos) {
+            addItem(new ComboMeal(salad, burger)); // $21.60, 2 units
+            addItem(new ComboMeal(salad, pasta));  // $24.30, 3 units
+            addItem(new ComboMeal(burger, pasta)); // $29.70, 3 units
+        }
     }
 
     public void addItem(MenuItem item) {

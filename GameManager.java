@@ -26,14 +26,27 @@ public class GameManager {
     private final Map<Customer, Integer> readyToPayTurn = new HashMap<>();
 
     public GameManager(ConsoleUI ui) {
+        this(ui, 1);
+    }
+
+    /**
+     * Creates a game controller for the given stage (1, 2, or 3):
+     *   Stage 1: Regular customers, 3 base menu items, Waiter/Chef/Cashier.
+     *   Stage 2: Adds VIPCustomer and CriticCustomer.
+     *   Stage 3: Adds Host, ComboMeal menu items, and Happy Hour.
+     */
+    public GameManager(ConsoleUI ui, int stage) {
+        if (stage < 1 || stage > 3) {
+            throw new IllegalArgumentException("Stage must be 1, 2, or 3");
+        }
         this.ui = ui;
-        this.restaurant = new Restaurant(NUMBER_OF_TABLES, new Menu());
+        this.restaurant = new Restaurant(NUMBER_OF_TABLES, new Menu(stage >= 3));
         this.waiter = new Waiter(1);
         this.chef = new Chef(2);
         this.cashier = new Cashier(3);
-        this.host = new Host(4);
-        this.happyHour = new HappyHour();
-        this.schedule = new ArrivalSchedule();
+        this.host = (stage >= 3) ? new Host(4) : null;
+        this.happyHour = (stage >= 3) ? new HappyHour() : null;
+        this.schedule = new ArrivalSchedule(stage >= 2);
         this.stats = new GameStatistics();
     }
 
@@ -57,7 +70,9 @@ public class GameManager {
     }
 
     private void playTurn() {
-        host.resetTurn();
+        if (host != null) {
+            host.resetTurn();
+        }
         waiter.resetTurn();
         chef.resetTurn();
         cashier.resetTurn();
@@ -69,14 +84,18 @@ public class GameManager {
 
         processArrival();                                   // Step 1: Arrivals
         ui.displayTurnStart(currentTurn, maxTurns, restaurant, stats);
-        handleHappyHourStartOfTurn();                       // Stage 3: Happy Hour prompt & +15 recovery
-        handleHostTask();                                   // Stage 3: Host seats up to 1 customer
+        if (happyHour != null) {
+            handleHappyHourStartOfTurn();                   // Stage 3: Happy Hour prompt & +15 recovery
+        }
+        if (host != null) {
+            handleHostTask();                               // Stage 3: Host seats up to 1 customer
+        }
         handleWaiterTask();                                 // Steps 2-3: Waiter acts first,
         handleChefTask();                                   //            then Chef
         processEatingAndPayment();                          // Step 4: Eating & Cashier
         processWaitingAndAbandonment();                     // Step 5: Satisfaction loss & abandonment
 
-        if (happyHour.isActive()) {
+        if (happyHour != null && happyHour.isActive()) {
             happyHour.advanceTurn();
         }
         ui.displayTurnEnd(currentTurn, maxTurns, stats);
@@ -115,8 +134,14 @@ public class GameManager {
         }
     }
 
-    /** Stage 3: Host seats at most one queued customer per turn, in addition to the Waiter. */
+    /**
+     * Stage 3: Host seats at most one queued customer per turn, in addition to the Waiter.
+     * Only asks the manager when someone is waiting in the queue AND at least one table is free.
+     */
     private void handleHostTask() {
+        if (restaurant.getWaitingQueue().isEmpty() || !hasFreeTable()) {
+            return;
+        }
         while (true) {
             int customerId = ui.promptHostTarget();   // 0 = Wait
             if (customerId == 0) {
@@ -146,6 +171,15 @@ public class GameManager {
             ui.showMessage("Host seats customer " + customer.getID() + " at table " + tableNumber + ".");
             return;
         }
+    }
+
+    private boolean hasFreeTable() {
+        for (Table table : restaurant.getTables()) {
+            if (!table.isOccupied()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Steps 2-3 for the Waiter: at most one task, or Wait. */
@@ -232,12 +266,12 @@ public class GameManager {
     }
 
     /**
-     * Documented deterministic rule: customer n orders menu item (n - 1) mod menu size.
-     * With 6 menu items (3 single dishes + 3 combos), C1-C3 order single dishes and C4-C6 order combos.
+     * Dispatches food selection polymorphically to the customer object:
+     * Regular/VIP customer n orders menu item (n - 1) mod menu size;
+     * CriticCustomer orders the most demanding item on the menu.
      */
     private MenuItem chooseItemFor(Customer customer) {
-        Menu menu = restaurant.getMenu();
-        return menu.getItem((customer.getID() - 1) % menu.getItemCount());
+        return customer.chooseDish(restaurant.getMenu());
     }
 
     private void handleChefTask() {

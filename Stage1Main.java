@@ -2,21 +2,21 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-/**
- * Entry point for Restaurant Rush.
+/*
+Run this file to play Stage 1. 
+After compiling with javac *.java: 
+ *   java Stage1Main.java                   : to play interactively from the keyboard
+ *   java Main test1.txt                    : play using the inputs in test1.txt (inputs are echoed)
+ *   java Stage1Main.java < tests/test.txt  : terminal command
+ *   java Main --echo < test1.txt           : same, but the script is piped in through standard input
+ *   java Main --turns 6 test1.txt          : shorter game for a focused test (default is 18 turns)
  *
- * Ways to run (after compiling with: javac *.java):
- *
- *   java Main                          play interactively from the keyboard
- *   java Main test1.txt                play using the inputs in test1.txt (inputs are echoed)
- *   java Main --echo < test1.txt       same, but the script is piped in through standard input
- *   java Main --turns 6 test1.txt      shorter game for a focused test (default is 18 turns)
- *
- * Test script format (handled by ConsoleUI): one number or y/n per line, in the order
- * the game asks for them. Blank lines and lines starting with '#' are skipped, so scripts
- * can be commented. If the script runs out early, every remaining prompt chooses 0 (Wait).
+Test script format (handled by ConsoleUI): one number or y/n per line
+Blank lines and lines starting with '#' are skipped, so scripts an be commented. 
+If the script runs out early, every remaining prompt chooses 0 (Wait).
+
  */
-public class Main {
+public class Stage1Main {
 
     public static void main(String[] args) {
         String scriptPath = null;
@@ -61,7 +61,7 @@ public class Main {
         }
 
         ConsoleUI ui = new ConsoleUI(scanner, echoInput);
-        GameManager game = new GameManager(ui);
+        GameManager game = new GameManager(ui, 1);
         if (maxTurns != null) {
             game.setMaxTurns(maxTurns);
         }

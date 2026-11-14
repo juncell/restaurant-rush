@@ -33,18 +33,27 @@ public class CriticCustomer extends Customer {
 
     @Override
     public void satisfactionLoss() {
-        // unique behaviour: if customer has ordered preferred dish -> satisfaction -15 
-        // else, satisfaction -12 
-
+        // Stage 2 specification: Critic loses 12 satisfaction per waiting turn
         if (!this.served) {
-            Order order = getCurrentOrder();
+            setSatisfaction(this.satisfaction - 12);
+        }
+    }
 
-            // if the preferred dish is ordered 
-            if (order != null && order.getMenuItem().getName().contains(this.preferredDish)) {
-                setSatisfaction(this.satisfaction - 15);
-            } else {
-                setSatisfaction(this.satisfaction - 12); // the default 
+    /**
+     * Critic special behaviour: always orders the most demanding item on the menu
+     * (most preparation units; ties broken by highest price).
+     */
+    @Override
+    public MenuItem chooseDish(Menu menu) {
+        MenuItem mostDemanding = menu.getItem(0);
+        for (int i = 1; i < menu.getItemCount(); i++) {
+            MenuItem candidate = menu.getItem(i);
+            if (candidate.getPrepUnits() > mostDemanding.getPrepUnits()
+                    || (candidate.getPrepUnits() == mostDemanding.getPrepUnits()
+                        && candidate.getPrice() > mostDemanding.getPrice())) {
+                mostDemanding = candidate;
             }
         }
+        return mostDemanding;
     }
 }
