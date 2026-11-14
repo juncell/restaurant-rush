@@ -22,3 +22,20 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Ignore Eclipse metadata
+.metadata/
+.classpath
+.project
+.settings/
+
+# Ignore VS Code metadata
+.vscode/
+
+# Ignore compiled Java bytecode
+*.class
+bin/
+target/
+
+# ignore macOS DS store 
+.DS_Store

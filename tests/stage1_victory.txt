@@ -1,0 +1,109 @@
+# TEST S1-VICTORY (Stage 1, base setting: 18 turns, 2 tables, arrivals on turns 1, 4, 7, 10, 13, 16)
+# Purpose           : reproducible VICTORY run. 
+# Expected end state: 5 paid, revenue $66.00, avg satisfaction 79.2
+# Run               : java Stage1Main tests/stage1_victory.txt
+# Format            : one input per line, in the order the game prompts. '#' lines and blank lines are skipped.
+# Waiter            : 1 = seat (then customer ID, then table number), 
+#                     2 = take order (then customer ID), 
+#                     3 = serve (then customer ID),
+#                     0 = wait.
+# Chef              : customer ID to cook for, 0 = wait.
+# Food rule (GameManager, chooseItemFor): C1 Salad, C2 Burger, C3 Pasta, C4 Salad, C5 Burger, C6 Pasta
+
+# Turn 1: C1 arrives. Waiter seats C1 at table 1. Chef waits. 
+1
+1
+1
+0
+# Turn 2: Waiter takes C1's order (Salad). Chef cooks C1 -> READY.
+2
+1
+1
+# Turn 3: Waiter serves C1 (SERVED, satisfaction locked at 84). Chef waits.
+3
+1
+0
+# Turn 4: C2 arrives. Waiter seats C2 at table 2. Chef waits. (C1 becomes ready to pay)
+1
+2
+2
+0
+# Turn 5: Waiter takes C2's order (Burger). Chef cooks C2 -> READY. (C1 pays $9.00)
+2
+2
+2
+# Turn 6: Waiter serves C2 (84). Chef waits.
+3
+2
+0
+# Turn 7: C3 arrives. Waiter seats C3 at table 1. Chef waits. (C2 becomes ready to pay)
+1
+3
+1
+0
+# Turn 8: Waiter takes C3's order (Pasta). Chef cooks C3, unit 1 of 2. (C2 pays $15.00)
+2
+3
+3
+# Turn 9: Waiter waits. Chef cooks C3, unit 2 of 2 -> READY.
+0
+3
+# Turn 10: C4 arrives. Waiter serves C3 (76). Chef waits.
+3
+3
+0
+# Turn 11: Waiter seats C4 at table 2. Chef waits. (C3 becomes ready to pay)00
+1
+4
+2
+0
+# Turn 12: Waiter takes C4's order (Salad). Chef cooks C4 -> READY. (C3 pays $18.00)
+2
+4
+4
+# Turn 13: C5 arrives. Waiter serves C4 (76). Chef waits.
+3
+4
+0
+# Turn 14: Waiter seats C5 at table 1. Chef waits. (C4 becomes ready to pay)
+1
+5
+1
+0
+# Turn 15: Waiter takes C5's order (Burger). Chef cooks C5 -> READY. (C4 pays $9.00 -> all 3 targets are met)
+2
+5
+5
+# Turn 16: C6 arrives. Waiter serves C5 (76). Chef waits.
+3
+5
+0
+# Turn 17: Waiter seats C6 at table 2. Chef waits. (C5 becomes ready to pay)
+1
+6
+2
+0
+# Turn 18: Waiter takes C6's order (Pasta). Chef cooks C6, unit 1 of 2. (C5 pays $15.00; C6 cannot finish)
+2
+6
+6
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
