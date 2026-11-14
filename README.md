@@ -74,3 +74,25 @@ This UML diagram corresponds to Stage 3.
 
 ![Sequence diagram simulating Stage 2]()
 
+## Design Discussion 
+
+### 1. Key Abstractions
+- **`Host`**: Manages allocating seats and ensure the availability of table
+- **`ComboMeal`**: Extends `MenuItem` give customer a choice to buy combination of items at a discounted price and calculate the total price of the combo 
+- **`Customer` (`VIPCustomer`, `CriticCustomer`)**: contains information about the clients and tracks their satisfaction levels. Different customers can implement their own discount systems due to polymorphism. 
+- **`Order`**: Tracks the whole order process (`PLACED` $\rightarrow$ `READY` $\rightarrow$ `SERVED` $\rightarrow$ `PAID`).
+- **`GameManager`**: supervises the game process by controlling the 18 turns and coordinating the various employee activities. 
+- **`HappyHour`**: check whether `HappyHour` is up and applies all the possible discounts for eligible orders. 
+
+### 2. SOLID Principles Highlights
+- **SRP & DIP**: Domain classes (`Host`, `ComboMeal`) are strictly decoupled from presentation logic, delegating all UI rendering to `ConsoleUI` instead of hardcoding `System.out.println`.
+- **OCP & LSP**: New customer tiers and menu items integrate smoothly into loops via polymorphism without modifying core manager classes.
+
+### 3. Trade-offs & Alternative Designs Considered
+The decision that was taken was to separate the game’s logic from its interface. While initially this was not straightforward, as it meant seeing more thought had to go into how the information was passed between the classes instead of just printing things. 
+
+However, this has resulted in the code being much better organised. Code structures and classes could be tested and modified more easily without a need to affect other game components.
+
+### 4. Player Choices & Game Outcomes
+- Strategic deployment of the `Host`, purchasing `ComboMeal` items during `HappyHour`, and managing customer tiers directly affect table turnaround times, average satisfaction ($\ge 60$), revenue ($\ge \$45.00$), and final victory evaluation (`GameStatistics.isVictory()`).
+
