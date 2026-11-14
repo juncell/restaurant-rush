@@ -21,10 +21,17 @@ public class Order {
         this.customer = customer;
         this.menuItem = menuItem;
         this.remainingPrepUnits = menuItem.getPrepUnits();
-        this.lockedPriceCents = menuItem.getPrice();   // Stage 1: every customer pays full price
+        this.lockedPriceCents = calculateLockedPriceCents(customer, menuItem);
         this.status = Status.PLACED;  // if an order obj is created, it must have been placed first 
         this.finishedReadyThisTurn = false;
         this.customer.setCurrentOrder(this);  
+    }
+
+    // to calculate the final price in cents so that we can return the right amount in change 
+    private int calculateLockedPriceCents(Customer customer, MenuItem item) {
+        // the customer's own discount (VIP 10% off)
+        double price = item.getPrice() * (1.0 - customer.getDiscount());
+        return (int) Math.round(price);
     }
 
     public boolean advancePrep() {

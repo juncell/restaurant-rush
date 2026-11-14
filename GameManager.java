@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Controller for Restaurant Rush (Stage 1: Regular customers, Waiter, Chef and Cashier).
+ * Controller for Restaurant Rush (Stage 2: includes Stage 1 and the Stage 2 VIP/Critic customers).
  */
 public class GameManager {
     private int maxTurns = 18;   // base setting: 18 turns
@@ -27,19 +27,20 @@ public class GameManager {
     }
 
     /**
-     * Creates a game controller for the given stage (only Stage 1 exists so far):
+     * Creates a game controller for the given stage (1 or 2):
      *   Stage 1: Regular customers, 3 base menu items, Waiter/Chef/Cashier.
+     *   Stage 2: Adds VIPCustomer and CriticCustomer.
      */
     public GameManager(ConsoleUI ui, int stage) {
-        if (stage != 1) {
-            throw new IllegalArgumentException("Stage must be 1");
+        if (stage < 1 || stage > 2) {
+            throw new IllegalArgumentException("Stage must be 1 or 2");
         }
         this.ui = ui;
         this.restaurant = new Restaurant(NUMBER_OF_TABLES, new Menu());
         this.waiter = new Waiter(1);
         this.chef = new Chef(2);
         this.cashier = new Cashier(3);
-        this.schedule = new ArrivalSchedule();
+        this.schedule = new ArrivalSchedule(stage >= 2);
         this.stats = new GameStatistics();
     }
 
@@ -179,7 +180,8 @@ public class GameManager {
 
     /**
      * Dispatches food selection polymorphically to the customer object:
-     * customer n orders menu item (n - 1) mod menu size.
+     * Regular/VIP customer n orders menu item (n - 1) mod menu size;
+     * CriticCustomer orders the most demanding item on the menu.
      */
     private MenuItem chooseItemFor(Customer customer) {
         return customer.chooseDish(restaurant.getMenu());

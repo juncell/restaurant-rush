@@ -4,6 +4,7 @@ public class Customer {
     protected boolean readyToPay = false;
     protected boolean served = false;
     protected boolean readyToServe = false;
+    protected double discount = 0.0; // overwrite this value in the child classes 
     protected int tableNumber = 0; 
     private Order currentOrder;
     protected int customerID; 
@@ -58,6 +59,10 @@ public class Customer {
         this.readyToServe = readyToServe;
     }
 
+    public double getDiscount() {
+        return this.discount;
+    }
+
     public Order getCurrentOrder() {
         return this.currentOrder;
     }
@@ -81,7 +86,8 @@ public class Customer {
     }
 
     /**
-     * Documented deterministic rule: customer n chooses menu item (n - 1) mod menu size.
+     * Documented deterministic rule: Regular and VIP customers choose menu item (ID - 1) mod menu size.
+     * Subclasses (such as CriticCustomer) override this to define their own order preference.
      */
     public MenuItem chooseDish(Menu menu) {
         return menu.getItem((this.customerID - 1) % menu.getItemCount());

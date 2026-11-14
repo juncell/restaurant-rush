@@ -1,0 +1,89 @@
+# TEST S2-VICTORY (Stage 2, base setting: 18 turns, 2 tables, arrivals on turns 1, 4, 7, 10, 13, 16)
+# Purpose           : reproducible VICTORY run with one VIP (C2) and one Critic (C4).
+# Line-up           : C1 Regular, C2 VIP, C3 Regular, C4 Critic, C5 Regular, C6 Regular
+# Food rule         : Regular/VIP customer n orders menu item (n - 1) mod 3 -> C1 Salad, C2 Burger,
+#                     C3 Pasta, C5 Burger, C6 Pasta. Critic orders the most demanding dish -> C4 Pasta.
+# Expected end state: VICTORY. 5 paid, revenue $73.50, avg satisfaction 75.6, 0 unhappy departures.
+#                     Paid: C1 $9.00 (84), C2 $13.50 VIP (90), C3 $18.00 (76), C4 $18.00 Critic (52), C5 $15.00 (76)
+# Run               : java Stage2Main tests/stage2_victory.txt
+# Format            : one input per line, '#' lines and blank lines are skipped.
+#                     Waiter: 1 = seat (then customer ID, then table), 2 = take order (then ID),
+#                             3 = serve (then ID), 0 = wait.   Chef: customer ID to cook for, 0 = wait.
+
+# Turn 1: C1 arrives. Waiter seats C1 at T1. Chef waits.                        C1 92
+1
+1
+1
+0
+# Turn 2: Waiter takes C1's order (Salad $9.00). Chef cooks C1 -> READY.        C1 84
+2
+1
+1
+# Turn 3: Waiter serves C1 (84 locked). Chef waits.
+3
+1
+0
+# Turn 4: C2 (VIP) arrives. Waiter seats C2 at T2. Chef waits. C1 ready to pay. C2 95
+1
+2
+2
+0
+# Turn 5: Waiter takes C2's order (Burger, VIP bill $13.50). Chef cooks C2 -> READY. C1 pays $9.00.  C2 90
+2
+2
+2
+# Turn 6: Waiter serves C2 (90 locked). Chef waits.
+3
+2
+0
+# Turn 7: C3 arrives. Waiter seats C3 at T1. Chef waits. C2 ready to pay.       C3 92
+1
+3
+1
+0
+# Turn 8: Waiter takes C3's order (Pasta $18.00). Chef cooks C3, unit 1 of 2. C2 pays $13.50.  C3 84
+2
+3
+3
+# Turn 9: Waiter waits. Chef cooks C3, unit 2 of 2 -> READY.                    C3 76
+0
+3
+# Turn 10: C4 (Critic) arrives. Waiter serves C3 (76 locked). Chef waits.        C4 88
+3
+3
+0
+# Turn 11: Waiter seats C4 at T2. Chef waits. C3 ready to pay.                   C4 76
+1
+4
+2
+0
+# Turn 12: Waiter takes C4's order (Critic -> Pasta $18.00). Chef cooks C4, unit 1 of 2. C3 pays $18.00.  C4 64
+2
+4
+4
+# Turn 13: C5 arrives. Waiter seats C5 at T1. Chef cooks C4, unit 2 of 2 -> READY.  C4 52, C5 92
+1
+5
+1
+4
+# Turn 14: Waiter serves C4 (52 locked). Chef waits.                             C5 84
+3
+4
+0
+# Turn 15: Waiter takes C5's order (Burger $15.00). Chef cooks C5 -> READY. C4 ready to pay.  C5 76
+2
+5
+5
+# Turn 16: C6 arrives. Waiter serves C5 (76 locked). Chef waits. C4 pays $18.00 (targets met).  C6 92
+3
+5
+0
+# Turn 17: Waiter seats C6 at T2 (freed by C4 on turn 16). Chef waits. C5 ready to pay.  C6 84
+1
+6
+2
+0
+# Turn 18: Waiter takes C6's order (Pasta). Chef cooks C6, unit 1 of 2. C5 pays $15.00.  C6 76 (cannot finish)
+2
+6
+6

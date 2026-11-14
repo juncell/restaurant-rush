@@ -11,7 +11,7 @@ public class ConsoleUI {
 	private static final int WIDTH = 66;
 	private static final String HEAVY_LINE = repeat('=', WIDTH);
 	private static final String LIGHT_LINE = "  " + repeat('-', WIDTH - 2);
-	private static final int LABEL_WIDTH = 18;   // column for "C1 (Regular)"
+	private static final int LABEL_WIDTH = 18;   // column for "C2 (VIP)" / "G1 (party of 3)"
 	private static final int BAR_SLOTS = 10;     // satisfaction bar: one slot per 10 points
 	private static final int MENU_WIDTH = 46;    // width of the menu table
 
@@ -229,12 +229,12 @@ public class ConsoleUI {
 				+ "  " + status;
 	}
 
-	// "C1 (Regular)"
+	// "C2 (VIP)"
 	private String shortLabel(Customer customer) {
 		return "C" + customer.getID() + " (" + typeName(customer) + ")";
 	}
 
-	// Customer -> Regular
+	// Customer -> Regular, VIPCustomer -> VIP, CriticCustomer -> Critic
 	private String typeName(Customer customer) {
 		String type = customer.getClass().getSimpleName().replace("Customer", "");
 		return type.isEmpty() ? "Regular" : type;
