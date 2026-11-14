@@ -4,33 +4,51 @@ Restaurant Rush is a playable restaurant management game in Java, played across 
 The player's role is the restaurant manager. 
 
 ## Table of Contents
-- [How to play](#how-to-play)
+1. [How to play](#how-to-play)
+2. [Organisation of code](#organisation-of-code) 
+3. [Stage 1: basic operation](#stage-1-basic-operation)
+4. [Stage 2: additional customer behaviour](#stage-2-additional-customer-behaviour)
+5. [Stage 3: new role and menu policy](#stage-3-new-role-and-menu-policy)
+4. [Stage 4: additional features](#stage-4-additional-features)
+5. [UML Diagram](#uml-diagram)
+6. [Sequence Diagram](#sequence-diagram)
+7. [Video timestamps](#video-timestamps)
+8. [Design discussion](#design-discussion)
 
 
 ## How to play 
 1. There are test scripts under the folder: `tests`. 
 2. Compile the StageNMain.java (N = stage number) file. 
 3. If using Eclipse:  
-   * For Stage 1 to 3 Victory, Defeat and Invalid Input test scripts
+   * For Stage 1 to 3 Victory, Defeat and Invalid Input test scripts:
       - Run Configurations -> Main -> Main class: StageNMain
       - Run Configurations -> Arguments -> Program arguments: tests/test_script_name.txt
       - Apply -> Run  
-   * For Stage 4 Victory, Defeat and Invalid Input test scripts
+   * For Stage 4 Victory, Defeat and Invalid Input test scripts: 
       - Run Configurations -> Main -> Main class: Stage4Main.java
       - Run Configurations -> Arguments -> Program arguments: 51
       - Run Configurations -> Common -> Input File: Select Workspace -> retaurant-rush -> tests -> test_script_name.txt
       - Apply -> Run
-4. If using Visual Studio Code: java StageNMain.java < tests/test_script_name.txt 
+4. If using Visual Studio Code: 
+   * For Stage 1 to 3 Victory, Defeat and Invalid Input test scripts: 
+      - java StageNMain.java < tests/test_script_name.txt 
+   * For Stage 4 Victory, Defeat and Invalid Input test scripts: 
+      - java Stage4Main 51 tests/stage4_victory.txt
 
 Further commands are included in the respective StageNMain.java files for reference. 
 
-## Stage 1 
-### Specifications 
+## Organisation of code
+
+## Rules shared by every stage 
 1. There are 18 turns. 
 2. 3 staff: waiter, chef, cashier, each doing 1 unit of task per turn. 
 3. 2 total tables to seat customers.
 4. 1 customer comes in at the start of turns 1, 4, 7, 10, 13, 16. 
 5. Goal to succeed: at least 4 paid customers, $45 in revenue, average satisfaction >= 60.
+
+## Stage 1: basic operation
+### Specifications 
+Base setting. 
 
 ### Classes implemented 
 * `Customer`: handles satisfaction decrement, serving, seated and paid status. 
@@ -43,7 +61,7 @@ Further commands are included in the respective StageNMain.java files for refere
 
 
 
-## Stage 2
+## Stage 2: additional customer behaviour 
 ### Specifications 
 1. Implement new customer behaviours (VIP and Critic Customers). 
 2. The winning condition and general rule play remains the same. 
@@ -54,7 +72,7 @@ Further commands are included in the respective StageNMain.java files for refere
 
 
 
-## Stage 3 
+## Stage 3: new role and menu policy
 ### Specifications 
 1. Host: either host or waiter can seat the hosts, but host cannot do any other tasks than right. Can only seat 1 customer per turn
 2. Combo Meal: made of 2 existing menu items.
@@ -68,7 +86,7 @@ Further commands are included in the respective StageNMain.java files for refere
 ![alt text](diagrams/menu_and_host.png)
 
 
-## Stage 4 (additional features implemented)
+## Stage 4: additional features
 ### Specifications
 1. Host: Gives a seated customer an immediate +5 satisfaction boost and suggest who to seat next based on the lowest satisfaction rate.
 2. Combo Meal: Avoid making a combo that consist of two of the same items, and format item breakdown with total dollar savings. 
@@ -93,6 +111,8 @@ This UML diagram corresponds to Stage 3.
 * A helper function, `stage2SequenceDiagramScenario()` was used generate a sequence diagram from Visual Paradigm. 
 
 ![Sequence diagram simulating Stage 2](diagrams/sequence_diagram.svg)
+
+## Video timestamps 
 
 ## Design Discussion 
 
