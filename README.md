@@ -51,8 +51,15 @@ All four stages share one set of classes. Each stage has its own entry point, wh
 `ConsoleUI` is the only class that reads input or prints; the game rules live in the domain classes and the
 controllers (`GameManager`, `Stage4GameManager`).
 
+## Rules shared by every stage 
+1. There are 18 turns. 
+2. 3 staff: waiter, chef, cashier, each doing 1 unit of task per turn. 
+3. 2 total tables to seat customers.
+4. 1 customer comes in at the start of turns 1, 4, 7, 10, 13, 16. 
+5. Goal to succeed: at least 4 paid customers, $45 in revenue, average satisfaction >= 60.
+
 ## Stage Tags
-[!Disclaimer]
+> Note: 
 > Since we completed stages 1 to 3 simultaneously at the same time, we could not commit our stage tags into main. Hence, we decided to tag the stages via a branch `stage-snapshots`. 
 
 Each stage is tagged in GitHub: `stage-1`, `stage-2`, `stage-3`, plus `stage-4` for the extra. The tags are on the
@@ -108,12 +115,6 @@ Changed files
 
 Stages 1-3 never create any of the Stage 4 objects.
 
-## Rules shared by every stage 
-1. There are 18 turns. 
-2. 3 staff: waiter, chef, cashier, each doing 1 unit of task per turn. 
-3. 2 total tables to seat customers.
-4. 1 customer comes in at the start of turns 1, 4, 7, 10, 13, 16. 
-5. Goal to succeed: at least 4 paid customers, $45 in revenue, average satisfaction >= 60.
 
 ## Stage 1: Basic Operation
 ### Specifications 
