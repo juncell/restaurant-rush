@@ -1,0 +1,80 @@
+# TEST S2-DEFEAT (Stage 2, base setting: 18 turns, 2 tables, arrivals on turns 1, 4, 7, 10, 13, 16)
+# Purpose           : reproducible DEFEAT run caused by a manager choice. The manager serves the quick
+#                     1-unit dishes (C1 Salad, C2 VIP Burger) but never lets the Chef start a Pasta.
+#                     C3 (Pasta) and C4 (Critic, Pasta) then block both tables, so C5 and C6 are never seated.
+# Line-up           : C1 Regular, C2 VIP, C3 Regular, C4 Critic, C5 Regular, C6 Regular
+# Expected end state: DEFEAT. 2 paid (C1 $9.00 at 84, C2 $13.50 at 90), revenue $22.50 (need $45.00),
+#                     avg satisfaction 87.0, 2 served, 1 unhappy departure (C4 the Critic leaves at the end of
+#                     turn 18: 100 - 12 x 9 = 0). C3 ends at 4, C5 at 52, C6 at 76 (still in the restaurant).
+# Run (tag stage-2) : java Main tests/stage2_defeat.txt
+# Format            : as in stage2_victory.txt
+
+# Turn 1: C1 arrives. Waiter seats C1 at T1. Chef waits.
+1
+1
+1
+0
+# Turn 2: Waiter takes C1's order (Salad). Chef cooks C1 -> READY.
+2
+1
+1
+# Turn 3: Waiter serves C1. Chef waits.
+3
+1
+0
+# Turn 4: C2 (VIP) arrives. Waiter seats C2 at T2. Chef waits.
+1
+2
+2
+0
+# Turn 5: Waiter takes C2's order (Burger, $13.50). Chef cooks C2 -> READY. C1 pays $9.00.
+2
+2
+2
+# Turn 6: Waiter serves C2. Chef waits.
+3
+2
+0
+# Turn 7: C3 arrives. Waiter seats C3 at T1. Chef waits.
+1
+3
+1
+0
+# Turn 8: Waiter takes C3's order (Pasta). BAD CHOICE: Chef waits instead of starting the Pasta. C2 pays $13.50.
+2
+3
+0
+# Turn 9: Waiter waits. Chef waits.
+0
+0
+# Turn 10: C4 (Critic) arrives. Waiter seats C4 at T2. Chef waits.
+1
+4
+2
+0
+# Turn 11: Waiter takes C4's order (Pasta). Chef waits again.
+2
+4
+0
+# Turns 12-18: Waiter and Chef wait. Both tables stay blocked; C5 (turn 13) and C6 (turn 16) wait in the queue.
+# Turn 12
+0
+0
+# Turn 13
+0
+0
+# Turn 14
+0
+0
+# Turn 15
+0
+0
+# Turn 16
+0
+0
+# Turn 17
+0
+0
+# Turn 18: C4 reaches 0 at the end of this turn and leaves; the Pasta order is cancelled and T2 is freed.
+0
+0

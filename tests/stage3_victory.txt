@@ -1,0 +1,106 @@
+# TEST S3-VICTORY (Stage 3, base setting: 18 turns, 2 tables, arrivals on turns 1, 4, 7, 10, 13, 16)
+# Purpose           : reproducible VICTORY run using every Stage 3 feature:
+#                     Host seating (the Waiter takes the order in the same turn), ComboMeal orders,
+#                     and Happy Hour on turn 4 (VIP Burger $15 x 0.9 x 0.8 = $10.80, the brief's example).
+# Line-up           : C1 Regular, C2 VIP, C3 Regular, C4 Critic, C5 Regular, C6 Regular
+# Menu (index)      : 0 Salad $9.00 (1u), 1 Burger $15.00 (1u), 2 Pasta $18.00 (2u),
+#                     3 Salad + Burger Combo $21.60 (2u), 4 Salad + Pasta Combo $24.30 (3u),
+#                     5 Burger + Pasta Combo $29.70 (3u)
+# Food rule         : Regular/VIP customer n orders item (n - 1) mod 6 -> C1 Salad, C2 Burger, C3 Pasta,
+#                     C5 Salad + Pasta Combo, C6 Burger + Pasta Combo. The Critic orders the most demanding
+#                     item (most units, tie -> higher price) -> C4 Burger + Pasta Combo.
+# Expected end state: VICTORY. 5 paid, revenue $91.80, avg satisfaction 80.8, 0 unhappy departures.
+#                     Paid: C1 $9.00 (92), C2 $10.80 (100), C3 $18.00 (84), C4 $29.70 (52), C5 $24.30 (76)
+# Run (tag stage-3) : java Main tests/stage3_victory.txt
+# Input order each turn:
+#   1. "Activate Happy Hour ...? (y/n)" - only asked until Happy Hour has been used
+#   2. Host: customer ID (0 = wait), then table - only asked when someone is queuing AND a table is free
+#   3. Waiter: 1 = seat (ID, table), 2 = take order (ID), 3 = serve (ID), 0 = wait
+#   4. Chef: customer ID to cook for, 0 = wait
+
+# Turn 1: C1 arrives. No Happy Hour. Host seats C1 at T1. Waiter takes C1's order (Salad). Chef -> READY. C1 92
+n
+1
+1
+2
+1
+1
+# Turn 2: No Happy Hour. (Host: queue empty.) Waiter serves C1 (92). Chef waits.
+n
+3
+1
+0
+# Turn 3: No Happy Hour. Waiter waits. Chef waits. C1 ready to pay.
+n
+0
+0
+# Turn 4: C2 (VIP) arrives. Happy Hour ON (2 turns). Host seats C2 at T2.
+#         Waiter takes C2's order: Burger $15.00 x 0.9 (VIP) x 0.8 (Happy Hour) = $10.80. Chef -> READY.
+#         C1 pays $9.00 (92). C2 ends at 95.
+y
+2
+2
+2
+2
+2
+# Turn 5: Happy Hour turn 2 of 2: C2 recovers 95 -> 100. (Host: queue empty.) Waiter serves C2 (100). Chef waits.
+3
+2
+0
+# Turn 6: (Happy Hour used, no prompt.) Waiter waits. Chef waits. C2 ready to pay.
+0
+0
+# Turn 7: C3 arrives. Host seats C3 at T1. Waiter takes C3's order (Pasta $18.00). Chef unit 1 of 2.
+#         C2 pays $10.80 (100). C3 ends at 92.
+3
+1
+2
+3
+3
+# Turn 8: Waiter waits. Chef unit 2 of 2 -> READY. C3 84
+0
+3
+# Turn 9: Waiter serves C3 (84). Chef waits.
+3
+3
+0
+# Turn 10: C4 (Critic) arrives. Host seats C4 at T2. Waiter takes C4's order (Burger + Pasta Combo $29.70).
+#          Chef unit 1 of 3. C3 ready to pay. C4 88
+4
+2
+2
+4
+4
+# Turn 11: Waiter waits. Chef unit 2 of 3. C3 pays $18.00 (84). C4 76
+0
+4
+# Turn 12: Waiter waits. Chef unit 3 of 3 -> READY. C4 64
+0
+4
+# Turn 13: C5 arrives. Host seats C5 at T1. Waiter takes C5's order (Salad + Pasta Combo $24.30).
+#          Chef unit 1 of 3 for C5. C4 52, C5 92
+5
+1
+2
+5
+5
+# Turn 14: Waiter serves C4 (52). Chef unit 2 of 3 for C5. C5 84
+3
+4
+5
+# Turn 15: Waiter waits. Chef unit 3 of 3 -> READY. C4 ready to pay. C5 76
+0
+5
+# Turn 16: C6 arrives. (Host: no free table.) Waiter serves C5 (76). Chef waits. C4 pays $29.70 (52).
+3
+5
+0
+# Turn 17: Host seats C6 at T2. Waiter takes C6's order (Burger + Pasta Combo). Chef unit 1 of 3. C5 ready to pay.
+6
+2
+2
+6
+6
+# Turn 18: Waiter waits. Chef unit 2 of 3. C5 pays $24.30 (76). C6 cannot finish.
+0
+6
