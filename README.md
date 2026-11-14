@@ -4,20 +4,20 @@ Restaurant Rush is a playable restaurant management game in Java, played across 
 The player's role is the restaurant manager. 
 
 ## Table of Contents
-1. [How to play](#how-to-play)
-2. [Organisation of code](#organisation-of-code)
+1. [How to Play](#how-to-play)
+2. [Organisation of Code](#organisation-of-code)
 3. [Stage Tags](#stage-tags)
-4. [Stage 1: basic operation](#stage-1-basic-operation)
-5. [Stage 2: additional customer behaviour](#stage-2-additional-customer-behaviour)
-6. [Stage 3: new role and menu policy](#stage-3-new-role-and-menu-policy)
-4. [Stage 4: additional features](#stage-4-additional-features)
+4. [Stage 1: Basic Operation](#stage-1-basic-operation)
+5. [Stage 2: Additional Customer Behaviour](#stage-2-additional-customer-behaviour)
+6. [Stage 3: New Role and Menu Policy](#stage-3-new-role-and-menu-policy)
+4. [Stage 4: Additional Features](#stage-4-additional-features)
 5. [UML Diagram](#uml-diagram)
 6. [Sequence Diagram](#sequence-diagram)
 7. [Video timestamps](#video-timestamps)
 8. [Design discussion](#design-discussion)
 
 
-## How to play 
+## How to Play 
 1. There are test scripts under the folder: `tests`. 
 2. Compile the StageNMain.java (N = stage number) file. 
 3. If using Eclipse:  
@@ -38,7 +38,7 @@ The player's role is the restaurant manager.
 
 Further commands are included in the respective StageNMain.java files for reference. 
 
-## Organisation of code
+## Organisation of Code
 All four stages share one set of classes. Each stage has its own entry point, which builds the game for that stage:
 
 | Entry point | Builds | What it turns on |
@@ -51,8 +51,7 @@ All four stages share one set of classes. Each stage has its own entry point, wh
 `ConsoleUI` is the only class that reads input or prints; the game rules live in the domain classes and the
 controllers (`GameManager`, `Stage4GameManager`).
 
-## Stage tags
-
+## Stage Tags
 Each stage is tagged in GitHub: `stage-1`, `stage-2`, `stage-3`, plus `stage-4` for the extra. The tags are on the
 `stage-snapshots` branch, where each commit holds one stage's code only (Stage 1 has no Stage 2 or 3 classes);
 `main` holds the final version, including the Stage 4 extra.
@@ -113,7 +112,7 @@ Stages 1-3 never create any of the Stage 4 objects.
 4. 1 customer comes in at the start of turns 1, 4, 7, 10, 13, 16. 
 5. Goal to succeed: at least 4 paid customers, $45 in revenue, average satisfaction >= 60.
 
-## Stage 1: basic operation
+## Stage 1: Basic Operation
 ### Specifications 
 Base setting. 
 
@@ -128,7 +127,7 @@ Base setting.
 
 
 
-## Stage 2: additional customer behaviour 
+## Stage 2: Additional Customer Behaviour 
 ### Specifications 
 1. Implement new customer behaviours (VIP and Critic Customers). 
 2. The winning condition and general rule play remains the same. 
@@ -139,7 +138,7 @@ Base setting.
 
 
 
-## Stage 3: new role and menu policy
+## Stage 3: New Role and Menu Policy
 ### Specifications 
 1. Host: either host or waiter can seat the hosts, but host cannot do any other tasks than right. Can only seat 1 customer per turn
 2. Combo Meal: made of 2 existing menu items.
@@ -153,7 +152,7 @@ Base setting.
 ![alt text](diagrams/menu_and_host.png)
 
 
-## Stage 4: additional features
+## Stage 4: Additional Features
 ### Specifications
 1. Host: Gives a seated customer an immediate +5 satisfaction boost and suggest who to seat next based on the lowest satisfaction rate.
 2. Combo Meal: Avoid making a combo that consist of two of the same items, and format item breakdown with total dollar savings. 
