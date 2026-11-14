@@ -46,7 +46,7 @@ Further commands are included in the respective StageNMain.java files for refere
 
 ### Classes implemented 
 `VIPCustomer` and `CriticCustomer` are extended from the parent `Customer` class. 
-![UML diagram of customer classes](image.png)
+![UML diagram of customer classes](diagrams/customer_classes.png)
 
 
 
@@ -61,7 +61,7 @@ Further commands are included in the respective StageNMain.java files for refere
 * `HappyHour`: provides an additional 20% discount and +15 satisfaction recovery. 
 * `Host`: extends the `Staff` class.
 * `Menu`: Holds available base items and combos in an array. 
-![alt text](image-2.png)
+![alt text](diagrams/menu_and_host.png)
 
 
 ## Stage 4 (additional features implemented)
@@ -70,18 +70,25 @@ Further commands are included in the respective StageNMain.java files for refere
 2. Combo Meal: Avoid making a combo that consist of two of the same items, and format item breakdown with total dollar savings. 
 3. Group seating (`Stage4Main` / `Stage4GameManager`): random number of tables (2-4) with random capacities (2-6). Arrivals (same turns as Stages 1-3) are either an individual customer (`C`) or a party (`G`, a `CustomerGroup`).
    * Individuals follow Stage 1-3 rules (own order, own bill) and may share a `GroupTable` with strangers until it is full.
+
+   ![GroupTable UML diagram](diagrams/GroupTable.svg)
+
    * Parties need an empty table big enough for all members, never share, and place one `GroupOrder`.
+
+   ![GroupOrder UML diagram](diagrams/GroupOrder.svg)
+   
    * Run `java Stage4Main [seed]` for mixed arrivals, or `java Stage4Main [seed] --groups-only` for parties only.
 
 
 ## UML Diagram
 This UML diagram corresponds to Stage 3. 
+![UML Class Diagram for Stage 3](diagrams/Stage3UML.svg)
 
 ## Sequence Diagram
 * This diagram simulates Stage 2 being played, specifically the `stage2_victory.txt`. 
 * A helper function, `stage2SequenceDiagramScenario()` was used generate a sequence diagram from Visual Paradigm. 
 
-![Sequence diagram simulating Stage 2]()
+![Sequence diagram simulating Stage 2](diagrams/sequence_diagram.svg)
 
 ## Design Discussion 
 
