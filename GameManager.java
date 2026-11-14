@@ -352,4 +352,133 @@ public class GameManager {
     private void showResult() {
         ui.displayFinalResult(stats.isVictory(), stats);
     }
+
+    /**
+     * TEMPORARY HELPER FOR VISUAL PARADIGM SEQUENCE DIAGRAM GENERATION (Stage 2 - stage2_victory.txt).
+     * Inlines the full turn sequence so Visual Paradigm's "Instant Reverse -> Java to Sequence Diagram"
+     * expands all lifelines, loops, guards, and concrete Stage 2 values in a single diagram.
+     */
+    public void stage2SequenceDiagramScenario() {
+        Menu menu = restaurant.getMenu();
+        ui.displayWelcome(menu, maxTurns);
+
+        for (currentTurn = 1; currentTurn <= maxTurns; currentTurn++) {
+            waiter.resetTurn();
+            chef.resetTurn();
+            cashier.resetTurn();
+
+            // Step 1: Arrivals (Turns 1, 4, 7, 10, 13, 16 -> includes C2 VIPCustomer & C4 CriticCustomer)
+            Customer c2_VIP = schedule.getArrival(currentTurn);
+            if (c2_VIP != null) {
+                restaurant.enqueue(c2_VIP);
+                ui.showMessage("Customer " + c2_VIP.getID() + " arrives (satisfaction = 100)");
+            }
+
+            ui.displayTurnStart(currentTurn, maxTurns, restaurant, stats);
+
+            Table table2 = restaurant.findTable(2);
+            Order order = (c2_VIP != null) ? c2_VIP.getCurrentOrder() : null;
+            if (order != null) {
+                order.clearTurnFlags();
+            }
+
+            // Steps 2 & 3a: Manager Choice - Waiter Task (loops on invalid input without using task)
+            boolean waiterTaskComplete = false;
+            while (!waiterTaskComplete) {
+                WaiterAction action = ui.promptWaiterAction();
+                if (action == WaiterAction.SEAT_CUSTOMER) {
+                    int seatCustomerId = ui.promptCustomerId("Seat which customer?");
+                    Customer queuedCustomer = restaurant.findCustomer(seatCustomerId);
+                    int tableNumber = ui.promptTableNumber();
+                    Table targetTable = restaurant.findTable(tableNumber);
+                    if (queuedCustomer != null && targetTable != null && !targetTable.isOccupied()) {
+                        waiter.seatCustomer(queuedCustomer, targetTable);
+                        targetTable.assignCustomer(queuedCustomer);
+                        queuedCustomer.setTableNumber(tableNumber);
+                        restaurant.seat(queuedCustomer, targetTable);
+                        waiterTaskComplete = true;
+                    } else {
+                        ui.showError("Invalid customer or occupied table - choose again");
+                    }
+                } else if (action == WaiterAction.TAKE_ORDER) {
+                    int orderCustomerId = ui.promptCustomerId("Take whose order?");
+                    Customer seatedCustomer = restaurant.findCustomer(orderCustomerId);
+                    if (seatedCustomer != null && seatedCustomer.getCurrentOrder() == null) {
+                        MenuItem chosenDish = seatedCustomer.chooseDish(menu);
+                        double vipDiscount_10pct = seatedCustomer.getDiscount();
+                        order = waiter.takeOrder(seatedCustomer, chosenDish, null);
+                        seatedCustomer.setCurrentOrder(order);
+                        waiterTaskComplete = true;
+                    } else {
+                        ui.showError("Customer not seated or already ordered - choose again");
+                    }
+                } else if (action == WaiterAction.SERVE_ORDER) {
+                    int serveCustomerId = ui.promptCustomerId("Serve whose order?");
+                    Customer readyCustomer = restaurant.findCustomer(serveCustomerId);
+                    Order readyOrder = (readyCustomer != null) ? readyCustomer.getCurrentOrder() : null;
+                    if (readyOrder != null && readyOrder.canBeServed()) {
+                        waiter.serveOrder(readyOrder);
+                        readyOrder.markServed();
+                        readyCustomer.setReadyToServe(false);
+                        readyCustomer.setServed(true);
+                        stats.recordServed();
+                        waiterTaskComplete = true;
+                    } else {
+                        ui.showError("Order not READY yet (dish finished this turn is served next turn)");
+                    }
+                } else {
+                    ui.showMessage("Waiter waits.");
+                    waiterTaskComplete = true;
+                }
+            }
+
+            // Steps 2 & 3b: Manager Choice - Chef Task (determines Victory vs Defeat outcome)
+            int chefTargetCustomerId = ui.promptChefTarget();
+            if (chefTargetCustomerId != 0 && order != null && order.getStatus() == Order.Status.PLACED) {
+                chef.prepOrder(order);
+                order.advancePrep();
+                if (order.getRemainingPrepUnits() == 0) {
+                    c2_VIP.setReadyToServe(true);
+                    ui.showMessage("Chef finishes dish -> Order status = READY");
+                }
+            } else {
+                ui.showMessage("Chef waits (in stage2_defeat.txt, skipping Pasta prep blocks tables -> DEFEAT)");
+            }
+
+            // Step 4: Eating (1 full turn after SERVED -> READY_TO_PAY) & Automatic Cashier Payment
+            if (c2_VIP != null && c2_VIP.isServed() && !c2_VIP.isReadyToPay()) {
+                c2_VIP.setReadyToPay(true);
+            }
+            if (c2_VIP != null && c2_VIP.isReadyToPay() && order != null) {
+                int lockedPrice_1350c = order.getLockedPriceCents();
+                int satisfactionAtPayment_90 = c2_VIP.getSatisfaction();
+                cashier.processPayment(order);
+                order.markPaid();
+                PaymentRecord record = new PaymentRecord(
+                        c2_VIP.getID(), lockedPrice_1350c, satisfactionAtPayment_90, currentTurn);
+                stats.recordPayment(record);
+                restaurant.release(c2_VIP);
+                table2.removeCustomer(c2_VIP);
+            }
+
+            // Step 5: Waiting Satisfaction Loss (Regular -8, VIP -5, Critic -12) & Abandonment
+            for (Customer presentCustomer : restaurant.getSeatedCustomers()) {
+                presentCustomer.satisfactionLoss();
+                if (presentCustomer.hasAbandoned()) {
+                    Order abandonedOrder = presentCustomer.getCurrentOrder();
+                    if (abandonedOrder != null) {
+                        abandonedOrder.cancel();
+                    }
+                    restaurant.release(presentCustomer);
+                    stats.recordUnhappyDeparture();
+                }
+            }
+
+            ui.displayTurnEnd(currentTurn, maxTurns, stats);
+        }
+
+        // Step 6: Final Result Check after Turn 18 (stage2_victory: 5 paid, $73.50, avg 75.6 -> VICTORY)
+        boolean isVictory_true = stats.isVictory();
+        ui.displayFinalResult(isVictory_true, stats);
+    }
 }
