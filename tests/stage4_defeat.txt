@@ -1,0 +1,97 @@
+# TEST S4-DEFEAT (Stage 4 extra: group seating, mixed arrivals)
+# Seed              : 51, mixed mode (the default: individuals C and parties G both arrive)
+# Tables (seeded)   : T1 seats 3, T2 seats 4, T3 seats 5, T4 seats 2
+# Arrivals          : turn 1 G1 = party of 3 (Critic, Critic, Regular)   turn 4 C2 Regular
+#                     turn 7 C3 Critic                                    turn 10 C4 VIP
+#                     turn 13 G5 = party of 2 (Critic, Regular)           turn 16 G6 = party of 5
+# Dishes            : drawn from the same seeded random stream when each order is taken, so they only
+#                     repeat if every earlier input is identical. Change one line and later orders change too.
+# Format            : Waiter: 1 = seat (ID, table), 2 = take order (ID), 3 = serve (ID), 0 = wait.
+#                     Chef: ID of the customer/party to cook for, 0 = wait. '#' lines are skipped.
+# Run               : java Stage4Main 51 < tests/stage4_defeat.txt
+# Strategy          : the manager always seats and takes orders BEFORE serving food that is already READY.
+#                     Turns 1-4 are identical to stage4_victory.txt; on turn 5 the Waiter takes C2's order
+#                     instead of serving G1, so G1's food waits on the pass and every customer pays unhappier.
+# Expected end state: DEFEAT. 4 paid, revenue $85.44 (met), avg satisfaction 55.5 (NOT met, need 60),
+#                     5 served, 0 unhappy departures.
+#                     Paid: G1 $39.00 (47, turn 8), C2 $18.00 (60, turn 11), C3 $9.00 (40, turn 14),
+#                           C4 $19.44 VIP (75, turn 17). G5 is served on turn 18 but cannot pay in time.
+# Compare with      : stage4_victory.txt (serve READY food first -> 5 paid, avg 66.8, VICTORY)
+
+# Turn 1: G1 arrives. Waiter seats G1 at T1. Chef waits.
+1
+1
+1
+0
+# Turn 2: Waiter takes G1's group order (Burger, Burger, Salad: 3 units, $39.00). Chef unit 1.
+2
+1
+1
+# Turn 3: Waiter waits. Chef unit 2.
+0
+1
+# Turn 4: C2 arrives. Waiter seats C2 at T4. Chef unit 3 -> G1 READY.
+1
+2
+4
+1
+# Turn 5: BAD CHOICE: Waiter takes C2's order (Pasta) instead of serving G1. Chef unit 1 for C2.
+2
+2
+2
+# Turn 6: Waiter finally serves G1. Chef finishes C2 -> READY.
+3
+1
+2
+# Turn 7: C3 arrives. Waiter seats C3 at T4 (sharing with C2) instead of serving C2. Chef waits.
+1
+3
+4
+0
+# Turn 8: Waiter takes C3's order (Salad). Chef finishes C3 -> READY. G1 pays $39.00 (47).
+2
+3
+3
+# Turn 9: Waiter serves C2. Chef waits.
+3
+2
+0
+# Turn 10: C4 arrives. Waiter seats C4 at T1 instead of serving C3. Chef waits.
+1
+4
+1
+0
+# Turn 11: Waiter takes C4's order (Salad + Burger Combo, VIP $19.44). Chef unit 1. C2 pays $18.00 (60).
+2
+4
+4
+# Turn 12: Waiter serves C3. Chef finishes C4 -> READY.
+3
+3
+4
+# Turn 13: G5 arrives. Waiter seats G5 at T2 instead of serving C4. Chef waits.
+1
+5
+2
+0
+# Turn 14: Waiter takes G5's group order (2 units). Chef unit 1. C3 pays $9.00 (40).
+2
+5
+5
+# Turn 15: Waiter serves C4. Chef finishes G5 -> READY.
+3
+4
+5
+# Turn 16: G6 (party of 5) arrives. Waiter seats G6 at T3 instead of serving G5. Chef waits.
+1
+6
+3
+0
+# Turn 17: Waiter takes G6's group order (10 units). Chef unit 1 for G6. C4 pays $19.44 (75).
+2
+6
+6
+# Turn 18: Waiter serves G5 (too late to pay). Chef unit 2 for G6.
+3
+5
+6

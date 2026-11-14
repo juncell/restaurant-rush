@@ -1,0 +1,87 @@
+# TEST S4-INVALID (Stage 4 extra) - input handling for group seating and group orders
+# Seed    : 51 (tables T1 seats 3, T2 seats 4, T3 seats 5, T4 seats 2; turn 1: party G1 of 3)
+# Run     : java Stage4Main 51 < tests/stage4_invalid_input.txt
+# Expected: exactly 7 rejections (lines containing "! "). Every task still succeeds afterwards:
+#           turn 1 G1 seated at T1; turn 2 G1's group order taken and Chef unit 1 done (2 units left).
+#           Turns 3-18 are explicit waits so the script also finishes in Eclipse (whose Input File does not
+#           signal end of input). Only the rejections and the two valid turns are being tested; the game
+#           itself ends in DEFEAT: 0 paid, $0.00, 2 unhappy departures (G1 and C2 run out of patience).
+
+# Turn 1 - Waiter: seat 9 (nobody with that ID)
+1
+9
+# Turn 1 - Waiter: seat G1 at T4 (seats 2, party of 3)
+1
+1
+4
+# Turn 1 - Waiter: seat G1 at table 7 (no such table)
+1
+1
+7
+# Turn 1 - Waiter: valid, seat G1 at T1 (seats 3)
+1
+1
+1
+# Turn 1 - Chef: cook for G1, who has not ordered; then wait
+1
+0
+# Turn 2 - Waiter: take order for 2 (not seated - has not arrived)
+2
+2
+# Turn 2 - Waiter: serve G1, who has no order yet
+3
+1
+# Turn 2 - Waiter: valid, take G1's group order
+2
+1
+# Turn 2 - Chef: not a number; then valid, cook G1 unit 1
+abc
+1
+# Turn 3 - Waiter waits, Chef waits
+0
+0
+# Turn 4 - Waiter waits, Chef waits
+0
+0
+# Turn 5 - Waiter waits, Chef waits
+0
+0
+# Turn 6 - Waiter waits, Chef waits
+0
+0
+# Turn 7 - Waiter waits, Chef waits
+0
+0
+# Turn 8 - Waiter waits, Chef waits
+0
+0
+# Turn 9 - Waiter waits, Chef waits
+0
+0
+# Turn 10 - Waiter waits, Chef waits
+0
+0
+# Turn 11 - Waiter waits, Chef waits
+0
+0
+# Turn 12 - Waiter waits, Chef waits
+0
+0
+# Turn 13 - Waiter waits, Chef waits
+0
+0
+# Turn 14 - Waiter waits, Chef waits
+0
+0
+# Turn 15 - Waiter waits, Chef waits
+0
+0
+# Turn 16 - Waiter waits, Chef waits
+0
+0
+# Turn 17 - Waiter waits, Chef waits
+0
+0
+# Turn 18 - Waiter waits, Chef waits
+0
+0
