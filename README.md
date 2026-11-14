@@ -28,9 +28,6 @@ Further commands are included in the respective StageNMain.java files for refere
 * `Restaurant`: handles how the restaurant functions (getting queue, menu, staff operations, etc). 
 * `Game Manager`: composite class that handles how the player plays the game (no. of turns, handle staff, play turn, etc). 
 
-### Sequence diagram 
-![Sequence diagram for stage 1](sequence_diagrams/GameManager.playTurn().svg)
-
 
 
 ## Stage 2
@@ -42,7 +39,6 @@ Further commands are included in the respective StageNMain.java files for refere
 `VIPCustomer` and `CriticCustomer` are extended from the parent `Customer` class. 
 ![UML diagram of customer classes](image.png)
 
-### Sequence diagram 
 
 
 ## Stage 3 
@@ -58,7 +54,6 @@ Further commands are included in the respective StageNMain.java files for refere
 * `Menu`: Holds available base items and combos in an array. 
 ![alt text](image-2.png)
 
-### Sequence diagram  
 
 ## Stage 4 (additional features implemented)
 ### Specifications
@@ -70,6 +65,12 @@ Further commands are included in the respective StageNMain.java files for refere
    * Run `java Stage4Main [seed]` for mixed arrivals, or `java Stage4Main [seed] --groups-only` for parties only.
 
 
+## UML Diagram
+This UML diagram corresponds to Stage 3. 
 
+## Sequence Diagram
+* This diagram simulates Stage 2 being played, specifically the `stage2_victory.txt`. 
+* A helper function, `stage2SequenceDiagramScenario()` was used generate a sequence diagram from Visual Paradigm. 
 
+![Sequence diagram simulating Stage 2]()
 

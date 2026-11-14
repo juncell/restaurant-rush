@@ -354,9 +354,10 @@ public class GameManager {
     }
 
     /**
-     * TEMPORARY HELPER FOR VISUAL PARADIGM SEQUENCE DIAGRAM GENERATION (Stage 2 - stage2_victory.txt).
-     * Inlines the full turn sequence so Visual Paradigm's "Instant Reverse -> Java to Sequence Diagram"
-     * expands all lifelines, loops, guards, and concrete Stage 2 values in a single diagram.
+     HELPER FOR VISUAL PARADIGM SEQUENCE DIAGRAM GENERATION (Stage 2 - stage2_victory.txt).
+     Inlines the full turn sequence so Visual Paradigm's "Instant Reverse"
+     Expands all lifelines, loops, guards, and concrete Stage 2 values in a single diagram.
+     Uses stage2_victory.txt
      */
     public void stage2SequenceDiagramScenario() {
         Menu menu = restaurant.getMenu();
