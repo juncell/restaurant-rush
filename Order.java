@@ -17,20 +17,23 @@ public class Order {
     private boolean finishedReadyThisTurn;
 
     // constructor class 
-    public Order(Customer customer, MenuItem menuItem) {
+    public Order(Customer customer, MenuItem menuItem, HappyHour happyHour) {
         this.customer = customer;
         this.menuItem = menuItem;
         this.remainingPrepUnits = menuItem.getPrepUnits();
-        this.lockedPriceCents = calculateLockedPriceCents(customer, menuItem);
+        this.lockedPriceCents = calculateLockedPriceCents(customer, menuItem, happyHour);
         this.status = Status.PLACED;  // if an order obj is created, it must have been placed first 
         this.finishedReadyThisTurn = false;
         this.customer.setCurrentOrder(this);  
     }
 
     // to calculate the final price in cents so that we can return the right amount in change 
-    private int calculateLockedPriceCents(Customer customer, MenuItem item) {
-        // the customer's own discount (VIP 10% off)
+    private int calculateLockedPriceCents(Customer customer, MenuItem item, HappyHour happyHour) {
+        // compounding discount  
         double price = item.getPrice() * (1.0 - customer.getDiscount());
+        if (happyHour != null && happyHour.isActive()) {
+            price = price * (1.0 - happyHour.getDiscount());
+        }
         return (int) Math.round(price);
     }
 

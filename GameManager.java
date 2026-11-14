@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Controller for Restaurant Rush (Stage 2: includes Stage 1 and the Stage 2 VIP/Critic customers).
+ * Controller for Restaurant Rush (Stage 3: includes Stage 1, Stage 2 VIP/Critic,
+ * and Stage 3 Host, ComboMeal, and Happy Hour).
  */
 public class GameManager {
     private int maxTurns = 18;   // base setting: 18 turns
@@ -13,9 +14,11 @@ public class GameManager {
     private int currentTurn;
     private final ConsoleUI ui;
     private final Restaurant restaurant;
+    private final Host host;
     private final Waiter waiter;
     private final Chef chef;
     private final Cashier cashier;
+    private final HappyHour happyHour;
     private final ArrivalSchedule schedule;
     private final GameStatistics stats;
 
@@ -27,19 +30,22 @@ public class GameManager {
     }
 
     /**
-     * Creates a game controller for the given stage (1 or 2):
+     * Creates a game controller for the given stage (1, 2, or 3):
      *   Stage 1: Regular customers, 3 base menu items, Waiter/Chef/Cashier.
      *   Stage 2: Adds VIPCustomer and CriticCustomer.
+     *   Stage 3: Adds Host, ComboMeal menu items, and Happy Hour.
      */
     public GameManager(ConsoleUI ui, int stage) {
-        if (stage < 1 || stage > 2) {
-            throw new IllegalArgumentException("Stage must be 1 or 2");
+        if (stage < 1 || stage > 3) {
+            throw new IllegalArgumentException("Stage must be 1, 2, or 3");
         }
         this.ui = ui;
-        this.restaurant = new Restaurant(NUMBER_OF_TABLES, new Menu());
+        this.restaurant = new Restaurant(NUMBER_OF_TABLES, new Menu(stage >= 3));
         this.waiter = new Waiter(1);
         this.chef = new Chef(2);
         this.cashier = new Cashier(3);
+        this.host = (stage >= 3) ? new Host(4) : null;
+        this.happyHour = (stage >= 3) ? new HappyHour() : null;
         this.schedule = new ArrivalSchedule(stage >= 2);
         this.stats = new GameStatistics();
     }
@@ -64,6 +70,9 @@ public class GameManager {
     }
 
     private void playTurn() {
+        if (host != null) {
+            host.resetTurn();
+        }
         waiter.resetTurn();
         chef.resetTurn();
         cashier.resetTurn();
@@ -75,10 +84,20 @@ public class GameManager {
 
         processArrival();                                   // Step 1: Arrivals
         ui.displayTurnStart(currentTurn, maxTurns, restaurant, stats);
+        if (happyHour != null) {
+            handleHappyHourStartOfTurn();                   // Stage 3: Happy Hour prompt & +15 recovery
+        }
+        if (host != null) {
+            handleHostTask();                               // Stage 3: Host seats up to 1 customer
+        }
         handleWaiterTask();                                 // Steps 2-3: Waiter acts first,
         handleChefTask();                                   //            then Chef
         processEatingAndPayment();                          // Step 4: Eating & Cashier
         processWaitingAndAbandonment();                     // Step 5: Satisfaction loss & abandonment
+
+        if (happyHour != null && happyHour.isActive()) {
+            happyHour.advanceTurn();
+        }
         ui.displayTurnEnd(currentTurn, maxTurns, stats);
     }
 
@@ -93,6 +112,74 @@ public class GameManager {
             }
             ui.showMessage("Customer " + arrival.getID() + " (" + type + ") arrives and joins the waiting queue.");
         }
+    }
+
+    /** Stage 3: Manager may activate Happy Hour once per game at turn start; active turns recover +15 satisfaction. */
+    private void handleHappyHourStartOfTurn() {
+        ui.displayHappyHourStatus(happyHour);
+        if (!happyHour.isUsedOnce()) {
+            if (ui.promptYesNo("Activate Happy Hour now? (lasts this turn and next)")) {
+                happyHour.activate();
+                ui.showMessage("Happy Hour ACTIVATED! (2 turns remaining)");
+            }
+        }
+        if (happyHour.isActive()) {
+            for (Customer c : restaurant.getWaitingQueue()) {
+                c.applyHappyHourRecovery();
+            }
+            for (Customer c : restaurant.getSeatedCustomers()) {
+                c.applyHappyHourRecovery();
+            }
+            ui.showMessage("Happy Hour boosts waiting/unserved customers' satisfaction by +15 (max 100).");
+        }
+    }
+
+    /**
+     * Stage 3: Host seats at most one queued customer per turn, in addition to the Waiter.
+     * Only asks the manager when someone is waiting in the queue AND at least one table is free.
+     */
+    private void handleHostTask() {
+        if (restaurant.getWaitingQueue().isEmpty() || !hasFreeTable()) {
+            return;
+        }
+        while (true) {
+            int customerId = ui.promptHostTarget();   // 0 = Wait
+            if (customerId == 0) {
+                ui.showMessage("Host waits.");
+                return;
+            }
+            Customer customer = restaurant.findCustomer(customerId);
+            if (customer == null || !restaurant.getWaitingQueue().contains(customer)) {
+                ui.showError("That customer is not in the waiting queue.");
+                continue;
+            }
+            int tableNumber = ui.promptTableNumber();
+            Table table = restaurant.findTable(tableNumber);
+            if (table == null) {
+                ui.showError("There is no table " + tableNumber + ".");
+                continue;
+            }
+            if (table.isOccupied()) {
+                ui.showError("Table " + tableNumber + " is occupied.");
+                continue;
+            }
+            if (!host.seatCustomer(customer, table)) {
+                ui.showError("The host could not seat that customer.");
+                continue;
+            }
+            restaurant.seat(customer, table);
+            ui.showMessage("Host seats customer " + customer.getID() + " at table " + tableNumber + ".");
+            return;
+        }
+    }
+
+    private boolean hasFreeTable() {
+        for (Table table : restaurant.getTables()) {
+            if (!table.isOccupied()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Steps 2-3 for the Waiter: at most one task, or Wait. */
@@ -151,7 +238,7 @@ public class GameManager {
             return "That customer has already ordered.";
         }
         MenuItem choice = chooseItemFor(customer);
-        Order order = waiter.takeOrder(customer, choice);
+        Order order = waiter.takeOrder(customer, choice, happyHour);
         if (order == null) {
             return "The waiter could not take that order.";
         }

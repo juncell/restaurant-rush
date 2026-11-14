@@ -16,12 +16,12 @@ public class Waiter extends Staff {
         return true;
     }
 
-    public Order takeOrder(Customer customer, MenuItem chosenItem) {
+    public Order takeOrder(Customer customer, MenuItem chosenItem, HappyHour happyHour) {
         // if busy in turn, no customer, no choice, no customer asking for order -> dont take order 
         if (this.hasActedThisTurn || customer == null || chosenItem == null || customer.getCurrentOrder() != null) {
             return null;
         }
-        Order order = new Order(customer, chosenItem);
+        Order order = new Order(customer, chosenItem, happyHour);
         this.hasActedThisTurn = true;
         return order;
     }

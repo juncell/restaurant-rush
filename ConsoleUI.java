@@ -59,6 +59,35 @@ public class ConsoleUI {
 		return readInt(PROMPT + "Chef   > ", 0, 99);
 	}
 
+	// Stage 3: the Host seats one queued customer per turn, in addition to the Waiter
+	public int promptHostTarget() {
+		startDecisions();
+		System.out.println();
+		System.out.println(PROMPT + "HOST     seat one queued customer: type the customer ID, or 0 to wait");
+		return readInt(PROMPT + "Host   > ", 0, 99);
+	}
+
+	// Stage 3: asked at the start of a turn until Happy Hour has been used
+	public boolean promptYesNo(String question) {
+		startDecisions();
+		System.out.println();
+		while (true) {
+			System.out.print(PROMPT + question + " (y/n): ");
+			String line = nextInputLine();
+			if (line == null) {
+				System.out.println("(no more input - answering n)");
+				return false;
+			}
+			if (line.equalsIgnoreCase("y") || line.equalsIgnoreCase("yes")) {
+				return true;
+			}
+			if (line.equalsIgnoreCase("n") || line.equalsIgnoreCase("no")) {
+				return false;
+			}
+			System.out.println(NOTE + "! Please type y or n.");
+		}
+	}
+
 	// ----------------------------------------------------------------- OUTPUT
 
 	// Opening screen, shown once before turn 1
@@ -122,6 +151,21 @@ public class ConsoleUI {
 		System.out.println("    Cashier   collects 1 payment per turn (automatic)");
 
 		decisionsHeaderPending = true;
+	}
+
+	// Stage 3: called right after displayTurnStart, so the manager also sees the Host and Happy Hour
+	public void displayHappyHourStatus(HappyHour happyHour) {
+		System.out.println("    Host      seat 1 queued customer, or wait");
+		section("HAPPY HOUR");
+		if (happyHour.isActive()) {
+			System.out.println("    ACTIVE   " + plural(happyHour.getRemainingTurns(), "turn")
+					+ " left including this one");
+			System.out.println("             20% off new orders, waiting customers +15 at turn start");
+		} else if (happyHour.isUsedOnce()) {
+			System.out.println("    used");
+		} else {
+			System.out.println("    available (once per game, lasts 2 turns)");
+		}
 	}
 
 	public void showMessage(String message) {

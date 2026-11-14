@@ -1,0 +1,37 @@
+# TEST S3-INVALID (Stage 3) - input handling for the new Stage 3 prompts
+# Section 3.4: "An invalid choice must explain why it failed and let the manager choose again, without
+#               using up the staff task."  Section 4.3: Happy Hour does not change orders already placed.
+# Run               : java Stage3Main --turns 3 tests/stage3_invalid_input.txt
+# Expected: exactly 7 rejection lines starting with "  !", every Host/Waiter/Chef task still succeeds
+#           afterwards, C1's Salad stays at $9.00 after Happy Hour starts on turn 2, and from turn 4 on
+#           (not reached with --turns 3) the Happy Hour question is no longer asked.
+
+# Turn 1 - Happy Hour question: not y/n, then n
+maybe
+n
+# Turn 1 - Host: not a number; customer 9 does not exist; table 5 does not exist; valid: seat C1 at T1
+x
+9
+1
+5
+1
+1
+# Turn 1 - Waiter: seat C1, who the Host already seated; then valid: take C1's order (Salad $9.00)
+1
+1
+2
+1
+# Turn 1 - Chef: valid, cook C1 -> READY
+1
+# Turn 2 - Happy Hour: y (C1's order was placed before, so its bill stays $9.00)
+y
+# Turn 2 - Waiter: out of range; then valid: serve C1
+5
+3
+1
+# Turn 2 - Chef: cook for C1, whose order is already SERVED; then wait
+1
+0
+# Turn 3 - (Happy Hour turn 2 of 2, no question.) Waiter waits. Chef waits.
+0
+0

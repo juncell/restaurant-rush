@@ -77,6 +77,12 @@ public class Customer {
         }
     }
 
+    public void applyHappyHourRecovery() {
+        if (!this.served) {
+            setSatisfaction(this.satisfaction + 15);
+        }
+    }
+
     public boolean hasAbandoned() {
         return this.satisfaction == 0 && !this.served;
     }

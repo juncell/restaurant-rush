@@ -60,7 +60,7 @@ public class Restaurant {
         return this.tables.get(tableNumber - 1);
     }
 
-    // records a seating after the Waiter has seated the customer at the table
+    // records a seating after the Waiter (or Host) has seated the customer at the table
     public void seat(Customer customer, Table table) {
         this.waitingQueue.remove(customer);
         this.seating.put(customer, table);

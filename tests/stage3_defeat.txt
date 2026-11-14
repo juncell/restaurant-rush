@@ -1,0 +1,112 @@
+# TEST S3-DEFEAT (Stage 3, base setting: 18 turns, 2 tables, arrivals on turns 1, 4, 7, 10, 13, 16)
+# Purpose           : reproducible DEFEAT run caused by manager choices. The manager never uses the Host or
+#                     Happy Hour and lets customers wait before seating and serving. Four customers pay and
+#                     revenue passes, but the average satisfaction target fails.
+# Line-up / menu    : as in stage3_victory.txt (C4 Critic orders the Burger + Pasta Combo, $29.70, 3 units)
+# Expected end state: DEFEAT. 4 paid, revenue $70.20 (target met), avg satisfaction 49.8 (199 / 4 = 49.75,
+#                     target 60 NOT met), 4 served, 0 unhappy departures.
+#                     Paid: C1 $9.00 (52), C2 $13.50 VIP (75), C3 $18.00 (44), C4 $29.70 Critic (28)
+#                     Still in the restaurant at the end: C5 52 (queue), C6 76 (queue)
+# Compare with      : stage3_victory.txt - same customers, but the Host seats each arrival at once -> 80.8
+# Run               : java Stage3Main tests/stage3_defeat.txt
+# Input order each turn: Happy Hour y/n (until used) -> Host (only if someone queues AND a table is free)
+#                        -> Waiter -> Chef. See stage3_victory.txt for the codes.
+
+# Turn 1: C1 arrives. No Happy Hour. Host waits. Waiter waits. Chef waits.          C1 92
+n
+0
+0
+0
+# Turn 2: same.                                                                    C1 84
+n
+0
+0
+0
+# Turn 3: same.                                                                    C1 76
+n
+0
+0
+0
+# Turn 4: C2 (VIP) arrives. Host waits. Waiter seats C1 at T1. Chef waits.         C1 68, C2 95
+n
+0
+1
+1
+1
+0
+# Turn 5: Host waits. Waiter seats C2 at T2. Chef waits.                           C1 60, C2 90
+n
+0
+1
+2
+2
+0
+# Turn 6: (Host: queue empty.) Waiter takes C1's order (Salad $9.00). Chef -> READY. C1 52, C2 85
+n
+2
+1
+1
+# Turn 7: C3 arrives. (Host: no free table.) Waiter serves C1 (52). Chef waits.     C2 80, C3 92
+n
+3
+1
+0
+# Turn 8: Waiter takes C2's order (Burger, VIP $13.50). Chef -> READY. C1 ready to pay. C2 75, C3 84
+n
+2
+2
+2
+# Turn 9: Waiter serves C2 (75). Chef waits. C1 pays $9.00 (52).                   C3 76
+n
+3
+2
+0
+# Turn 10: C4 (Critic) arrives. Host waits. Waiter seats C3 at T1. Chef waits. C2 ready to pay. C3 68, C4 88
+n
+0
+1
+3
+1
+0
+# Turn 11: (Host: no free table.) Waiter takes C3's order (Pasta). Chef unit 1 of 2. C2 pays $13.50 (75). C3 60, C4 76
+n
+2
+3
+3
+# Turn 12: Host waits. Waiter seats C4 at T2. Chef unit 2 of 2 -> READY.           C3 52, C4 64
+n
+0
+1
+4
+2
+3
+# Turn 13: C5 arrives. (Host: no free table.) Waiter takes C4's order (Burger + Pasta Combo $29.70).
+#          Chef unit 1 of 3 for C4. C3's Pasta waits on the pass.                  C3 44, C4 52, C5 92
+n
+2
+4
+4
+# Turn 14: Waiter serves C3 (44). Chef unit 2 of 3.                                 C4 40, C5 84
+n
+3
+3
+4
+# Turn 15: Waiter waits. Chef unit 3 of 3 -> READY. C3 ready to pay.                C4 28, C5 76
+n
+0
+4
+# Turn 16: C6 arrives. (Host: no free table.) Waiter serves C4 (28). Chef waits. C3 pays $18.00 (44). C5 68, C6 92
+n
+3
+4
+0
+# Turn 17: Host waits. Waiter waits. Chef waits. C4 ready to pay.                   C5 60, C6 84
+n
+0
+0
+0
+# Turn 18: Host waits. Waiter waits. Chef waits. C4 pays $29.70 (28).               C5 52, C6 76
+n
+0
+0
+0
