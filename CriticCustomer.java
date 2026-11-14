@@ -13,7 +13,7 @@ public class CriticCustomer extends Customer {
         this(ID, new Random());
     }
 
-    // pass a seeded Random to make the critic's favourite dish reproducible
+    // Stage 4: pass the game's seeded Random so the critic's favourite dish is reproducible
     public CriticCustomer(int ID, Random random) {
         super(ID); 
         this.discount = 0.0; 

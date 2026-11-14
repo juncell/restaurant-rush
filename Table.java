@@ -38,7 +38,7 @@ public class Table {
         }
     }
 
-    // a specific customer leaves; a single-seat table just frees its seat
+    // a specific customer leaves; a single-seat table just frees its seat (GroupTable overrides this for shared tables)
     public void removeCustomer(Customer customer) {
         removeCustomer();
     }

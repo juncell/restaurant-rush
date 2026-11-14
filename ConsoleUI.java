@@ -130,19 +130,33 @@ public class ConsoleUI {
 		}
 		int position = 1;
 		for (Customer customer : queue) {
-			System.out.println(row("Q" + position, customer, "waiting for a table"));
+			String waiting = "waiting for a table";
+			if (customer instanceof CustomerGroup) {
+				waiting += "  (" + memberTypes((CustomerGroup) customer) + ")";
+			}
+			System.out.println(row("Q" + position, customer, waiting));
 			position++;
 		}
 
 		section("TABLES");
+		boolean anyoneSeated = false;
+		boolean groupTables = false;
 		for (Table table : restaurant.getTables()) {
+			groupTables = groupTables || (table instanceof GroupTable);
 			List<Customer> atTable = customersAt(table, restaurant);
 			if (atTable.isEmpty()) {
-				System.out.println("    T" + table.getTableNumber() + "  - free -");
+				if (!(table instanceof GroupTable)) {   // Stage 4 shows free tables on the seating map
+					System.out.println("    T" + table.getTableNumber() + "  - free -");
+				}
+				continue;
 			}
+			anyoneSeated = true;
 			for (Customer customer : atTable) {
 				System.out.println(row("T" + table.getTableNumber(), customer, describeStatus(customer)));
 			}
+		}
+		if (groupTables && !anyoneSeated) {
+			System.out.println("    (nobody seated yet - see the seating map below)");
 		}
 
 		section("STAFF");
@@ -165,6 +179,20 @@ public class ConsoleUI {
 			System.out.println("    used");
 		} else {
 			System.out.println("    available (once per game, lasts 2 turns)");
+		}
+	}
+
+	// Stage 4: every table drawn as its seats ("o" taken, "." free), with who sits there
+	public void displayTableLayout(Restaurant restaurant) {
+		section("SEATING MAP");
+		int widest = 0;
+		for (Table table : restaurant.getTables()) {
+			widest = Math.max(widest, seatPicture(table).length());
+		}
+		for (Table table : restaurant.getTables()) {
+			String size = (table instanceof GroupTable) ? plural(((GroupTable) table).getCapacity(), "seat") : "";
+			System.out.println("    T" + table.getTableNumber() + "  " + pad(seatPicture(table), widest + 2)
+					+ pad(size, 10) + describeTable(table));
 		}
 	}
 
@@ -273,9 +301,29 @@ public class ConsoleUI {
 				+ "  " + status;
 	}
 
-	// "C2 (VIP)"
+	// "C2 (VIP)", or "G1 (party of 3)" for a Stage 4 party
 	private String shortLabel(Customer customer) {
+		if (customer instanceof CustomerGroup) {
+			return "G" + customer.getID() + " (party of " + ((CustomerGroup) customer).getPartySize() + ")";
+		}
 		return "C" + customer.getID() + " (" + typeName(customer) + ")";
+	}
+
+	// "G1 (party of 3: Critic, Critic, Regular)" or "C2 (VIP)"
+	private String label(Customer customer) {
+		if (customer instanceof CustomerGroup) {
+			CustomerGroup group = (CustomerGroup) customer;
+			return "G" + group.getID() + " (party of " + group.getPartySize() + ": " + memberTypes(group) + ")";
+		}
+		return shortLabel(customer);
+	}
+
+	private String memberTypes(CustomerGroup group) {
+		List<String> types = new ArrayList<>();
+		for (Customer member : group.getMembers()) {
+			types.add(typeName(member));
+		}
+		return String.join(", ", types);
 	}
 
 	// Customer -> Regular, VIPCustomer -> VIP, CriticCustomer -> Critic
@@ -306,7 +354,43 @@ public class ConsoleUI {
 		return "ordered " + dish + ", cooked " + done + "/" + total + bill;
 	}
 
-	// Everyone seated at this table
+	// "[o o o . .]": one mark per seat, "o" taken and "." free
+	private String seatPicture(Table table) {
+		if (!(table instanceof GroupTable)) {
+			return table.isOccupied() ? "[o]" : "[.]";
+		}
+		int capacity = ((GroupTable) table).getCapacity();
+		int taken = capacity - table.get_seatsRemaining();
+		List<String> seats = new ArrayList<>();
+		for (int i = 0; i < capacity; i++) {
+			seats.add(i < taken ? "o" : ".");
+		}
+		return "[" + String.join(" ", seats) + "]";
+	}
+
+	// Stage 4 seating map: who sits at this table
+	private String describeTable(Table table) {
+		if (!(table instanceof GroupTable)) {
+			return table.isOccupied() ? "occupied" : "free";
+		}
+		GroupTable groupTable = (GroupTable) table;
+		if (groupTable.getParty() != null) {
+			return label(groupTable.getParty());
+		}
+		if (groupTable.getIndividuals().isEmpty()) {
+			return "free";
+		}
+		List<String> names = new ArrayList<>();
+		for (Customer customer : groupTable.getIndividuals()) {
+			names.add(shortLabel(customer));
+		}
+		int free = table.get_seatsRemaining();
+		String sharing = (names.size() > 1) ? "shared, " : "";
+		return String.join(", ", names) + "  -  " + sharing
+				+ (free == 0 ? "full" : plural(free, "seat") + " free for individuals");
+	}
+
+	// Everyone seated at this table (one party, or one or more individuals)
 	private List<Customer> customersAt(Table table, Restaurant restaurant) {
 		List<Customer> result = new ArrayList<>();
 		for (Customer customer : restaurant.getSeatedCustomers()) {
