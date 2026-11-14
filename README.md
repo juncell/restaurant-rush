@@ -6,10 +6,11 @@ The player's role is the restaurant manager.
 ## Table of Contents
 1. [How to Play](#how-to-play)
 2. [Organisation of Code](#organisation-of-code)
-3. [Stage Tags](#stage-tags)
-4. [Stage 1: Basic Operation](#stage-1-basic-operation)
-5. [Stage 2: Additional Customer Behaviour](#stage-2-additional-customer-behaviour)
-6. [Stage 3: New Role and Menu Policy](#stage-3-new-role-and-menu-policy)
+3. [Rules Shared by Each Stage](#rules-shared-by-each-stage)
+5. [Stage Tags](#stage-tags)
+6. [Stage 1: Basic Operation](#stage-1-basic-operation)
+7. [Stage 2: Additional Customer Behaviour](#stage-2-additional-customer-behaviour)
+8. [Stage 3: New Role and Menu Policy](#stage-3-new-role-and-menu-policy)
 4. [Stage 4: Additional Features](#stage-4-additional-features)
 5. [UML Diagram](#uml-diagram)
 6. [Sequence Diagram](#sequence-diagram)
@@ -68,7 +69,7 @@ Each stage is tagged in GitHub: `stage-1`, `stage-2`, `stage-3`, plus `stage-4` 
 
 To run a tagged version: `git checkout stage-2`, then `javac *.java` and `java Stage2Main`; return with
 `git checkout main`.
-### Stage 1 -> Stage 2
+### Stage 1 &rarr Stage 2
 Compare: https://github.com/juncell/restaurant-rush/compare/stage-1...stage-2
 
 New files
@@ -83,7 +84,7 @@ Changed files
 * `ArrivalSchedule.java`: makes C2 a VIP and C4 a Critic when Stage 2 is on.
 * `GameManager.java`: takes the stage number and asks each customer what it orders (`customer.chooseDish(menu)`).
 
-### Stage 2 -> Stage 3
+### Stage 2 &rarr Stage 3
 Compare: https://github.com/juncell/restaurant-rush/compare/stage-2...stage-3
 
 New files
@@ -98,7 +99,7 @@ Changed files
 * `GameManager.java`: adds the Happy Hour question, the Host's turn before the Waiter, and the Happy Hour countdown.
 * `ConsoleUI.java`: adds the Host and yes/no prompts and the Happy Hour status.
 
-### Stage 3 -> Stage 4 (extra)
+### Stage 3 &rarr Stage 4 (additional features)
 Compare: https://github.com/juncell/restaurant-rush/compare/stage-3...stage-4
 
 New files
