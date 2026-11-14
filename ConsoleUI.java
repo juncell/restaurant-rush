@@ -12,7 +12,7 @@ public class ConsoleUI{
 		this(scanner, false);
 	}
 	
-	//prints input line so test script shows what was inputed
+	// prints input line so test script shows what was inputed
 	public ConsoleUI(Scanner scanner, boolean echoInput) {
 		this.scanner = scanner;
 		this.echoInput = echoInput;
