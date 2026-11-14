@@ -52,6 +52,9 @@ All four stages share one set of classes. Each stage has its own entry point, wh
 controllers (`GameManager`, `Stage4GameManager`).
 
 ## Stage Tags
+> [!Disclaimer]
+> Since we completed stages 1 to 3 simultaneously at the same time, we could not commit our stage tags into main. Hence, we decided to tag the stages via a branch `stage-snapshots`. 
+
 Each stage is tagged in GitHub: `stage-1`, `stage-2`, `stage-3`, plus `stage-4` for the extra. The tags are on the
 `stage-snapshots` branch, where each commit holds one stage's code only (Stage 1 has no Stage 2 or 3 classes);
 `main` holds the final version, including the Stage 4 extra.
