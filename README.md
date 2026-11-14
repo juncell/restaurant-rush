@@ -94,5 +94,5 @@ The decision that was taken was to separate the game’s logic from its interfac
 However, this has resulted in the code being much better organised. Code structures and classes could be tested and modified more easily without a need to affect other game components.
 
 ### 4. Player Choices & Game Outcomes
-- Strategic deployment of the `Host`, purchasing `ComboMeal` items during `HappyHour`, and managing customer tiers directly affect table turnaround times, average satisfaction ($\ge 60$), revenue ($\ge $45.00$), and final victory evaluation (`GameStatistics.isVictory()`).
+- Strategic deployment of the `Host`, purchasing `ComboMeal` items during `HappyHour`, and managing customer tiers directly affect table turnaround times, average satisfaction ($\ge 60$), revenue ($\ge 45.00$), and final victory evaluation (`GameStatistics.isVictory()`).
 
