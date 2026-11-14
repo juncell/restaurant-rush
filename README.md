@@ -1,4 +1,7 @@
 # restaurant-rush
+
+**GitHub Repository Link: https://github.com/juncell/restaurant-rush**
+
 Restaurant Rush is a playable restaurant management game in Java, played across 3 stages. Done as part of SC2002: Object Oriented Programming and Designing Assignment. 
 
 The player's role is the restaurant manager. 
