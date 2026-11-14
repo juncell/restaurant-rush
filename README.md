@@ -3,6 +3,10 @@ Restaurant Rush is a playable restaurant management game in Java, played across 
 
 The player's role is the restaurant manager. 
 
+## Table of Contents
+- (How to play)[#how-to-play]
+
+
 ## How to play 
 1. There are test scripts under the folder: `tests`. 
 2. Compile the StageNMain.java (N = stage number) file. 
@@ -76,7 +80,7 @@ Further commands are included in the respective StageNMain.java files for refere
    * Parties need an empty table big enough for all members, never share, and place one `GroupOrder`.
 
    ![GroupOrder UML diagram](diagrams/GroupOrder.svg)
-   
+
    * Run `java Stage4Main [seed]` for mixed arrivals, or `java Stage4Main [seed] --groups-only` for parties only.
 
 
