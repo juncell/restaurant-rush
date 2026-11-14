@@ -6,7 +6,16 @@ The player's role is the restaurant manager.
 ## How to play 
 1. There are test scripts under the folder: `tests`. 
 2. Compile the StageNMain.java (N = stage number) file. 
-3. If using Eclipse: 
+3. If using Eclipse:  
+   * For Stage 1 to 3 Victory, Defeat and Invalid Input test scripts
+      - Run Configurations -> Main -> Main class: StageNMain
+      - Run Configurations -> Arguments -> Program arguments: tests/test_script_name.txt
+      - Apply -> Run  
+   * For Stage 4 Victory, Defeat and Invalid Input test scripts
+      - Run Configurations -> Main -> Main class: Stage4Main.java
+      - Run Configurations -> Arguments -> Program arguments: 51
+      - Run Configurations -> Common -> Input File: Select Workspace -> retaurant-rush -> tests -> test_script_name.txt
+      - Apply -> Run
 4. If using Visual Studio Code: java StageNMain.java < tests/test_script_name.txt 
 
 Further commands are included in the respective StageNMain.java files for reference. 
