@@ -29,7 +29,7 @@ Further commands are included in the respective StageNMain.java files for refere
 * `Game Manager`: composite class that handles how the player plays the game (no. of turns, handle staff, play turn, etc). 
 
 ### Sequence diagram 
-![UML Class Diagram for Stage 1](image-1.png)
+![Sequence diagram for stage 1](sequence_diagrams/GameManager.playTurn().svg)
 
 
 
