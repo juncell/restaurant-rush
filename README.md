@@ -5,10 +5,11 @@ The player's role is the restaurant manager.
 
 ## Table of Contents
 1. [How to play](#how-to-play)
-2. [Organisation of code](#organisation-of-code) 
-3. [Stage 1: basic operation](#stage-1-basic-operation)
-4. [Stage 2: additional customer behaviour](#stage-2-additional-customer-behaviour)
-5. [Stage 3: new role and menu policy](#stage-3-new-role-and-menu-policy)
+2. [Organisation of code](#organisation-of-code)
+3. [Stage Tags](#stage-tags)
+4. [Stage 1: basic operation](#stage-1-basic-operation)
+5. [Stage 2: additional customer behaviour](#stage-2-additional-customer-behaviour)
+6. [Stage 3: new role and menu policy](#stage-3-new-role-and-menu-policy)
 4. [Stage 4: additional features](#stage-4-additional-features)
 5. [UML Diagram](#uml-diagram)
 6. [Sequence Diagram](#sequence-diagram)
@@ -49,6 +50,61 @@ All four stages share one set of classes. Each stage has its own entry point, wh
 
 `ConsoleUI` is the only class that reads input or prints; the game rules live in the domain classes and the
 controllers (`GameManager`, `Stage4GameManager`).
+
+## Stage tags
+
+Each stage is tagged in GitHub: `stage-1`, `stage-2`, `stage-3`, plus `stage-4` for the extra. The tags are on the
+`stage-snapshots` branch, where each commit holds one stage's code only (Stage 1 has no Stage 2 or 3 classes);
+`main` holds the final version, including the Stage 4 extra.
+
+To run a tagged version: `git checkout stage-2`, then `javac *.java` and `java Stage2Main`; return with
+`git checkout main`.
+### Stage 1 -> Stage 2
+Compare: https://github.com/juncell/restaurant-rush/compare/stage-1...stage-2
+
+New files
+* `VIPCustomer.java`, `CriticCustomer.java`: the two new customer types.
+* `Stage2Main.java`: entry point for Stage 2.
+* `tests/stage2_victory.txt`, `tests/stage2_defeat.txt`.
+
+Changed files
+* `Customer.java`: adds the `discount` field and `chooseDish(Menu)`, so each customer type can override its own
+  discount and food choice.
+* `Order.java`: the locked price applies the customer's discount.
+* `ArrivalSchedule.java`: makes C2 a VIP and C4 a Critic when Stage 2 is on.
+* `GameManager.java`: takes the stage number and asks each customer what it orders (`customer.chooseDish(menu)`).
+
+### Stage 2 -> Stage 3
+Compare: https://github.com/juncell/restaurant-rush/compare/stage-2...stage-3
+
+New files
+* `Host.java`, `ComboMeal.java`, `HappyHour.java`: the three Stage 3 features.
+* `Stage3Main.java`: entry point for Stage 3.
+* `tests/stage3_victory.txt`, `tests/stage3_defeat.txt`, `tests/stage3_invalid_input.txt`.
+
+Changed files
+* `Menu.java`: adds the three combos when Stage 3 is on (small setup change).
+* `Customer.java`: adds `applyHappyHourRecovery()` (+15, up to 100, only while not yet served).
+* `Order.java`, `Waiter.java`: an order taken during Happy Hour gets 20% off after the VIP discount.
+* `GameManager.java`: adds the Happy Hour question, the Host's turn before the Waiter, and the Happy Hour countdown.
+* `ConsoleUI.java`: adds the Host and yes/no prompts and the Happy Hour status.
+
+### Stage 3 -> Stage 4 (extra)
+Compare: https://github.com/juncell/restaurant-rush/compare/stage-3...stage-4
+
+New files
+* `Stage4Main.java`, `Stage4GameManager.java`, `Stage4ArrivalSchedule.java`: entry point, controller and random arrivals.
+* `CustomerGroup.java`, `GroupOrder.java`, `GroupTable.java`: parties, group orders and shared tables.
+* `tests/stage4_victory.txt`, `tests/stage4_defeat.txt`, `tests/stage4_invalid_input.txt`.
+
+Changed files
+* `ConsoleUI.java`: the seating map and party labels.
+* `Restaurant.java`: a constructor that takes a ready-made list of tables (random sizes).
+* `Table.java`: lets `GroupTable` free one seat at a time for shared tables.
+* `Host.java`: the two Stage 4 methods (`seatCustomerWithMoraleBoost`, `suggestNextCustomer`).
+* `CriticCustomer.java`: a constructor that takes the game's seeded random generator.
+
+Stages 1-3 never create any of the Stage 4 objects.
 
 ## Rules shared by every stage 
 1. There are 18 turns. 
