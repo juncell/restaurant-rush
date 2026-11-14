@@ -4,7 +4,7 @@ Restaurant Rush is a playable restaurant management game in Java, played across 
 The player's role is the restaurant manager. 
 
 ## Table of Contents
-- (How to play)[#how-to-play]
+- [How to play](#how-to-play)
 
 
 ## How to play 
