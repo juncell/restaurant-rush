@@ -38,6 +38,17 @@ The player's role is the restaurant manager.
 Further commands are included in the respective StageNMain.java files for reference. 
 
 ## Organisation of code
+All four stages share one set of classes. Each stage has its own entry point, which builds the game for that stage:
+
+| Entry point | Builds | What it turns on |
+|---|---|---|
+| `Stage1Main` | `new GameManager(ui, 1)` | Regular customers, Salad / Burger / Pasta, Waiter, Chef, Cashier |
+| `Stage2Main` | `new GameManager(ui, 2)` | Stage 1 + a VIP (turn 4) and a Critic (turn 10) |
+| `Stage3Main` | `new GameManager(ui, 3)` | Stage 2 + Host, ComboMeal items on the menu, Happy Hour |
+| `Stage4Main` | `new Stage4GameManager(ui, seed, mixed)` | Extra: random tables and parties (`CustomerGroup`, `GroupTable`, `GroupOrder`) |
+
+`ConsoleUI` is the only class that reads input or prints; the game rules live in the domain classes and the
+controllers (`GameManager`, `Stage4GameManager`).
 
 ## Rules shared by every stage 
 1. There are 18 turns. 
