@@ -3,6 +3,14 @@ Restaurant Rush is a playable restaurant management game in Java, played across 
 
 The player's role is the restaurant manager. 
 
+## How to play 
+1. There are test scripts under the folder: `tests`. 
+2. Compile the StageNMain.java (N = stage number) file. 
+3. If using Eclipse: 
+4. If using Visual Studio Code: java StageNMain.java < tests/test_script_name.txt 
+
+Further commands are included in the respective StageNMain.java files for reference. 
+
 ## Stage 1 
 ### Specifications 
 1. There are 18 turns. 
@@ -20,7 +28,7 @@ The player's role is the restaurant manager.
 * `Restaurant`: handles how the restaurant functions (getting queue, menu, staff operations, etc). 
 * `Game Manager`: composite class that handles how the player plays the game (no. of turns, handle staff, play turn, etc). 
 
-### UML diagram 
+### Sequence diagram 
 ![UML Class Diagram for Stage 1](image-1.png)
 
 
@@ -34,8 +42,7 @@ The player's role is the restaurant manager.
 `VIPCustomer` and `CriticCustomer` are extended from the parent `Customer` class. 
 ![UML diagram of customer classes](image.png)
 
-### UML Diagram 
-
+### Sequence diagram 
 
 
 ## Stage 3 
@@ -51,7 +58,7 @@ The player's role is the restaurant manager.
 * `Menu`: Holds available base items and combos in an array. 
 ![alt text](image-2.png)
 
-### UML Diagram 
+### Sequence diagram  
 
 ## Stage 4 (additional features implemented)
 ### Specifications
