@@ -212,3 +212,5 @@ However, this has resulted in the code being much better organised. Code structu
 - Strategic deployment of the `Host`, purchasing `ComboMeal` items during `HappyHour`, and managing customer tiers directly affect table turnaround times, average satisfaction ($\ge 60$), revenue ($\ge 45.00$), and final victory evaluation (`GameStatistics.isVictory()`).
 
 ## Individual Reflection
+Jia Shuen: Created `Host`, `ComboMeal`, `Menu`, `MenuItem` classes, and additional feature implementations. 
+I learnt about object-oriented inheritance and polymorphism by writing `ComboMeal` subclass which inherits from `MenuItem` and overrides the key pricing and prep-unit logic. This is done using inheritance so that `ComboMeal` instances could be plugged straight into the existing arrays of Menu items alongside regular items without rewriting any menu management code. However, preventing floating point precision errors when determining exact cent values for discounted combo meals was difficult. To solve this, I stored all money values as integer cents, rounded to 10% discount with Math.rount(), and added validation to not allow duplicate items in a combo. 
