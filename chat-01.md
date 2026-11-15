@@ -1,4 +1,4 @@
-# AI Chat History - Stage 4
+# AI Chat History - Stage 4 (Antigravity)
 
 ## User (2026-11-13T22:43:48Z)
 
