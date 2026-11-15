@@ -226,6 +226,12 @@ This UML class diagram corresponds to Stage 3.
 ![Sequence diagram simulating Stage 2](diagrams/sequence_diagram.svg)
 
 ## Video Timestamps 
+| Time | Segment covered | 
+| :---: | :------------: |
+|0:00 | Game Overview | 
+| 1:58 | Gameplay demo using test scripts & explanation of results | 
+| 6:57 | Stage comparisons and UML class diagrams | 
+| 9:56 | UML sequence diagram which simulates a Stage 2 victory scenario (as per test script)|
 
 ## Design Discussion 
 
