@@ -183,11 +183,11 @@ Base setting.
    * Run `java Stage4Main [seed]` for mixed arrivals, or `java Stage4Main [seed] --groups-only` for parties only.
 
 
-## UML Diagram
-This UML diagram corresponds to Stage 3. 
+## UML Class Diagram
+This UML class diagram corresponds to Stage 3. 
 ![UML Class Diagram for Stage 3](diagrams/Stage3UML.svg)
 
-## Sequence Diagram
+## UML Sequence Diagram
 * This diagram simulates Stage 2 being played, specifically the `stage2_victory.txt`. 
 * A helper function, `stage2SequenceDiagramScenario()` was used generate a sequence diagram from Visual Paradigm. 
 
@@ -223,7 +223,7 @@ However, this has resulted in the code being much better organised. Code structu
 | Name | Contributions | 
 |:----: | ------------- | 
 | Jia Shuen | • Created `Host`, `ComboMeal`, `Menu`, `MenuItem` classes<br>• Additional features: `Host`, `ComboMeal` classes|
-|Lakshmi | • Created `Customer` and `Staff` classes (`Customer`, `VIP`, `Critic`, `Staff`, `Chef`, `Waiter`)<br>• `Order`, `Table` classes<br>• Additional features: `CustomerGroup`, `GroupOrder`, `GroupTable`, `Stage4ArrivalSchedule`, `Stage4Main` classes<br>• UML and sequence diagrams|
+|Lakshmi | • Created `Customer` and `Staff` classes (`Customer`, `VIP`, `Critic`, `Staff`, `Chef`, `Waiter`)<br>• `Order`, `Table` classes<br>• Additional features: `CustomerGroup`, `GroupOrder`, `GroupTable`, `Stage4ArrivalSchedule`, `Stage4Main` classes<br>• UML class and sequence diagrams|
 
 ### Reflections
 
