@@ -1,4 +1,4 @@
-# AI Chat History - Stage 4 (ChatGPT)
+# AI Chat History - Stage 3 (ChatGPT)
 
 **AI Tool:** ChatGPT  
 **Purpose:** Review of Stage 3 classes, OOP design principles and alignment with the SC2002 Restaurant Rush project brief.
