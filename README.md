@@ -280,4 +280,5 @@ Through this group assignment, I gained a better understanding of object-oriente
 
 ## AI Chat Histories 
 - Lakshmi: [view history here](https://github.com/juncell/restaurant-rush/blob/ai-history-lakshmi/chat-01.md) 
-- Jia Shuen: [view history here](https://github.com/juncell/restaurant-rush/blob/ai-history-jiashuen/chat-02.md) 
+- Jia Shuen: [view history here](https://github.com/juncell/restaurant-rush/blob/ai-history-jiashuen/chat-02.md)
+- Michell: [view history here](https://github.com/juncell/restaurant-rush/blob/ai-history-michell/chat-03.md)
