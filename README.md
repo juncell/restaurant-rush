@@ -240,3 +240,5 @@ I was able to apply OODP design rules and SOLID principles when designing my cla
 
 ## AI Chat Histories 
 Lakshmi: [view history here](https://github.com/juncell/restaurant-rush/blob/ai-history-lakshmi/chat-01.md) 
+Jia Shuen: [view history here](https://github.com/juncell/restaurant-rush/blob/ai-history-jiashuen/chat-02.md) 
+
