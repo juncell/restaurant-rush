@@ -291,3 +291,4 @@ Working on `GameManager` taught me how a controller class ties the domain classe
 - Lakshmi: [view history here](https://github.com/juncell/restaurant-rush/blob/ai-history-lakshmi/chat-01.md) 
 - Jia Shuen: [view history here](https://github.com/juncell/restaurant-rush/blob/ai-history-jiashuen/chat-02.md)
 - Michell: [view history here](https://github.com/juncell/restaurant-rush/blob/ai-history-michell/chat-03.md)
+- Isaac: [view history here](https://github.com/juncell/restaurant-rush/blob/ai-history-isaac/chat-04.md)
