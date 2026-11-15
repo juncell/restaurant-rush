@@ -254,7 +254,7 @@ However, this has resulted in the code being much better organised. Code structu
 
 | Name | Contributions | 
 |:----: | ------------- | 
-| Jia Shuen | • Created `Host`, `ComboMeal`, `Menu`, `MenuItem` classes<br>• Additional features: `Host`, `ComboMeal` classes|
+| Jia Shuen | • Created `Host`, `ComboMeal`, `Menu`, `MenuItem` classes<br>• Additional features: `Host`, `ComboMeal` classes<br>• Created UML class diagram|
 |Lakshmi | • Created `Customer` and `Staff` classes (`Customer`, `VIP`, `Critic`, `Staff`, `Chef`, `Waiter`)<br>• `Order`, `Table` classes<br>• Additional features: `CustomerGroup`, `GroupOrder`, `GroupTable`, `Stage4ArrivalSchedule`, `Stage4Main` classes<br>• UML class and sequence diagrams|
 | Michell | • Created `ConsoleUI` and `WaiterAction` classes <br>• Created test scripts<br>• Git tagging for 4 stages<br>|
 | Isaac | • Implemented `GameManager`: the 18-turn game loop, staff turn order and stage-based feature switching<br>• Stage 2 and 3 integration in `GameManager` (customer dish choice, Host turn, Happy Hour prompt and countdown)<br>• Contributed to the UML class diagram|
