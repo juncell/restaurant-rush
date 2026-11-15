@@ -10,6 +10,7 @@ The player's role is the restaurant manager.
 1. [How to Play](#how-to-play)
 2. [Organisation of Code](#organisation-of-code)
 3. [Rules Shared By Every Stage](#rules-shared-by-every-stage)
+4. [Key Outcomes](#key-outcomes)
 5. [Stage Tags](#stage-tags)
 6. [Stage 1: Basic Operation](#stage-1-basic-operation)
 7. [Stage 2: Additional Customer Behaviour](#stage-2-additional-customer-behaviour)
@@ -63,6 +64,33 @@ controllers (`GameManager`, `Stage4GameManager`).
 3. 2 total tables to seat customers.
 4. 1 customer comes in at the start of turns 1, 4, 7, 10, 13, 16. 
 5. Goal to succeed: at least 4 paid customers, $45 in revenue, average satisfaction >= 60.
+
+## Key Outcomes
+
+Every game is judged on the same three targets at the end of turn 18: at least **4 paying customers**,
+at least **$45.00 revenue**, and an **average satisfaction of at least 60** among paying customers.
+Each stage has a victory script and a defeat script with the same customers. Only the manager's
+decisions change, and between them the defeats miss each target at least once.
+
+| Stage | Victory (paid, revenue, avg satisfaction) | Defeat (paid, revenue, avg satisfaction) | Why the defeat loses |
+|---|---|---|---|
+| 1 | 5, $66.00, 79.2 | 0, $0.00, N/A | The staff only wait, so 2 customers walk out and nobody pays |
+| 2 | 5, $73.50, 75.6 | 2, $22.50, 87.0 | The Chef never starts a Pasta; both tables stay blocked and the Critic walks out |
+| 3 | 5, $91.80, 80.8 | 4, $70.20, 49.8 | No Host or Happy Hour, and slow service: average satisfaction falls below 60 |
+| 4 (extra) | 5, $115.44, 66.8 | 4, $85.44, 55.5 | New orders are taken before ready food is served, so customers wait longer |
+
+What each stage adds, as seen in the victory runs:
+
+* **Stage 2:** the VIP loses 5 satisfaction a turn instead of 8 and pays $13.50 for a $15.00 Burger.
+  The Critic loses 12 a turn and orders the hardest dish (Pasta). The VIP pays with satisfaction 90,
+  the Critic with 52.
+* **Stage 3:** the Host seats a customer so the Waiter can take their order in the same turn. Happy Hour
+  prices the VIP's Burger at $10.80 ($15.00 less 10%, then less 20%) and lifts the VIP from 95 to 100.
+  The Critic's Burger + Pasta Combo costs $29.70 (90% of the two dishes).
+* **Stage 4:** a party of three gets its own table and one $39.00 bill. Two single customers share a table.
+  A party's satisfaction is the average of its members.
+
+To reproduce these results, see [How to Play](#how-to-play).
 
 ## Stage Tags
 > Note: 
