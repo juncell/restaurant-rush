@@ -1,6 +1,7 @@
 # restaurant-rush
 
 **GitHub Repository Link: https://github.com/juncell/restaurant-rush**
+**Presentation Video Link: https://drive.google.com/file/d/13B79XpV1PyZxnWj6Vwh56rEcVOQJpwOy/view?usp=drivesdk**
 
 Restaurant Rush is a playable restaurant management game in Java, played across 3 stages. Done as part of SC2002: Object Oriented Programming and Designing Assignment. 
 
@@ -253,6 +254,7 @@ However, this has resulted in the code being much better organised. Code structu
 |:----: | ------------- | 
 | Jia Shuen | • Created `Host`, `ComboMeal`, `Menu`, `MenuItem` classes<br>• Additional features: `Host`, `ComboMeal` classes|
 |Lakshmi | • Created `Customer` and `Staff` classes (`Customer`, `VIP`, `Critic`, `Staff`, `Chef`, `Waiter`)<br>• `Order`, `Table` classes<br>• Additional features: `CustomerGroup`, `GroupOrder`, `GroupTable`, `Stage4ArrivalSchedule`, `Stage4Main` classes<br>• UML class and sequence diagrams|
+| Michell | • Created `ConsoleUI` and `WaiterAction` classes <br>• Created test scripts<br>• Git tagging for 4 stages<br>|
 | Isaac | • Implemented `GameManager`: the 18-turn game loop, staff turn order and stage-based feature switching<br>• Stage 2 and 3 integration in `GameManager` (customer dish choice, Host turn, Happy Hour prompt and countdown)<br>• Contributed to the UML class diagram|
 
 ### Reflections
