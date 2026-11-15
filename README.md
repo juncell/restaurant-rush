@@ -19,7 +19,7 @@ The player's role is the restaurant manager.
 6. [Sequence Diagram](#sequence-diagram)
 7. [Video Timestamps](#video-timestamps)
 8. [Design Discussion](#design-discussion)
-9. [Individual Reflection](#individual-reflection)
+9. [Individual Reflections and Contributions](#individual-reflections-and-contributions)
 
 
 ## How to Play 
@@ -211,6 +211,18 @@ However, this has resulted in the code being much better organised. Code structu
 ### 4. Player Choices & Game Outcomes
 - Strategic deployment of the `Host`, purchasing `ComboMeal` items during `HappyHour`, and managing customer tiers directly affect table turnaround times, average satisfaction ($\ge 60$), revenue ($\ge 45.00$), and final victory evaluation (`GameStatistics.isVictory()`).
 
-## Individual Reflection
-Jia Shuen: Created `Host`, `ComboMeal`, `Menu`, `MenuItem` classes, and additional feature implementations. 
-I learnt about object-oriented inheritance and polymorphism by writing `ComboMeal` subclass which inherits from `MenuItem` and overrides the key pricing and prep-unit logic. This is done using inheritance so that `ComboMeal` instances could be plugged straight into the existing arrays of Menu items alongside regular items without rewriting any menu management code. However, preventing floating point precision errors when determining exact cent values for discounted combo meals was difficult. To solve this, I stored all money values as integer cents, rounded to 10% discount with Math.rount(), and added validation to not allow duplicate items in a combo. 
+## Individual Reflections and Contributions 
+### Contributions 
+
+| Name | Contributions | 
+|:----: | ------------- | 
+| Jia Shuen | • Created `Host`, `ComboMeal`, `Menu`, `MenuItem` classes<br>• Additional features: `Host`, `ComboMeal` classes|
+|Lakshmi | • Created `Customer` and `Staff` classes (`Customer`, `VIP`, `Critic`, `Staff`, `Chef`, `Waiter`)<br>• `Order`, `Table` classes<br>• Additional features: `CustomerGroup`, `GroupOrder`, `GroupTable`, `Stage4ArrivalSchedule`, `Stage4Main` classes<br>• UML and sequence diagrams|
+
+### Reflections
+
+#### Jia Shuen  
+I learnt about object-oriented inheritance and polymorphism by writing `ComboMeal` subclass which inherits from `MenuItem` and overrides the key pricing and prep-unit logic. This is done using inheritance so that `ComboMeal` instances could be plugged straight into the existing arrays of Menu items alongside regular items without rewriting any menu management code. However, preventing floating point precision errors when determining exact cent values for discounted combo meals was difficult. To solve this, I stored all money values as integer cents, rounded to 10% discount with Math.round(), and added validation to not allow duplicate items in a combo. 
+
+#### Lakshmi 
+I was able to apply OODP design rules and SOLID principles when designing my classes. For the customer classes, I had to ensure that the various `Customer` classes were replaceable without affecting the game flow. I was also actively thinking about setting the right visibility for the various attributes in parent classes like `Customer` and `Staff` to allow a more efficient design without repeating code. I worked on implementing customer groups (such as families who either sit together or wait), handling group order and seating groups together on a table (while individual customers can share the table with anyone else). This made me think about extensibility when designing the `Customer`, `Order` and `Table` classes so that they could be easily extended to `CustomerGroup`, `GroupOrder`, and `TableOrder` without adding too much code. 
