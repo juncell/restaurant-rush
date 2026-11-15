@@ -232,3 +232,5 @@ I learnt about object-oriented inheritance and polymorphism by writing `ComboMea
 
 #### Lakshmi 
 I was able to apply OODP design rules and SOLID principles when designing my classes. For the customer classes, I had to ensure that the various `Customer` classes were replaceable without affecting the game flow. I was also actively thinking about setting the right visibility for the various attributes in parent classes like `Customer` and `Staff` to allow a more efficient design without repeating code. I worked on implementing customer groups (such as families who either sit together or wait), handling group order and seating groups together on a table (while individual customers can share the table with anyone else). This made me think about extensibility when designing the `Customer`, `Order` and `Table` classes so that they could be easily extended to `CustomerGroup`, `GroupOrder`, and `TableOrder` without adding too much code. 
+
+#### Michell
