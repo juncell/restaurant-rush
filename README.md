@@ -143,6 +143,12 @@ Base setting.
 
 ### Classes Implemented 
 `VIPCustomer` and `CriticCustomer` are extended from the parent `Customer` class. 
+
+Our `CriticCustomer` behaviour: 
+1. A random dish is chosen as the critic's favourite dish from an array of dishes.
+2. If that particular dish is ordered in that turn, the critic's satisfaction loss per turn = 15.
+3. If that dish is not ordered in that turn, the critic's satisfaction loss per turn = 12. 
+
 ![UML diagram of customer classes](diagrams/customer_classes.png)
 
 
